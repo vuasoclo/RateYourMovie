@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="reviewFeatureModel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="788.0" prefWidth="909.0" style="-fx-background-color: #FFEDCD;" styleClass="shadow" stylesheets="@../../../css/newStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.rateyourmovie.ReviewFeatureController">
+   <children>
+      <ImageView fx:id="movieImg" fitHeight="455.0" fitWidth="280.0" layoutX="14.0" layoutY="14.0">
+         <image>
+            <Image url="@../../../images/sh.png" />
+         </image>
+      </ImageView>
+      <HBox layoutX="314.0" layoutY="26.0">
+         <children>
+            <Label fx:id="movieName" prefHeight="31.0" prefWidth="264.0" text="ShawShank Redemption" textFill="#bf671e" wrapText="true">
+               <font>
+                  <Font name="Cambria" size="25.0" />
+               </font>
+            </Label>
+            <Label fx:id="movieYear" prefHeight="32.0" prefWidth="53.0" text="(1990)">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <Label fx:id="movieDirector" layoutX="314.0" layoutY="57.0" prefHeight="26.0" prefWidth="240.0" text="ShawShank Redemption" textFill="#fe9731">
+         <font>
+            <Font name="Calibri Bold" size="22.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER" layoutX="314.0" layoutY="96.0" spacing="5.0">
+         <children>
+            <ImageView fx:id="accImg" fitHeight="40.0" fitWidth="41.0">
+               <image>
+                  <Image url="@../../../icon/icons8-male-user-50.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="e1" text="Review by" />
+            <Label fx:id="accName" text="Label" textFill="#ee7912">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="314.0" layoutY="150.0">
+         <children>
+            <Label fx:id="accRating5" text="4.25/5" />
+            <ImageView fitHeight="26.0" fitWidth="26.0">
+               <image>
+                  <Image url="@../../../icon/icons8-star-48.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <Label fx:id="accReview" alignment="TOP_LEFT" layoutX="314.0" layoutY="192.0" prefHeight="513.0" prefWidth="575.0" text="It's a easy trap to fall in to – especially where so many written reviews are concerned – but care should be taken when throwing superlatives around. Otherwise every half decent album will attract descriptions like &quot;the best&quot;, &quot;the greatest&quot; or &quot;the definitive&quot; and opinion will, therefore, be rendered useless. In the case of Reading, Writing And Arithmetic by The Sundays the trap is almost impossible to avoid. Not, however, due to the overall quality of the music, but more because of the amazing vocal performance of Harriet Wheeler. She has been labelled angelic, ethereal and celestial and she certainly is all that. She has a litheness in her voice like liquid honey which enhances a musical style that's a mixture of The Smiths and the Cocteau Twins – a very eclectic brew which could have been disastrous but is saved by the wonderful Wheeler and the sturdy, melodic guitar-work of David Gavurin.The highlight of the whole album is the scintillating &quot;Here's Where The Story Ends&quot;. You’d be hard pressed to find a more breathtaking slice of pop. The guitar, bass and drums just trundle in the background while this voice performs mind-boggling loops and rolls. It's the musical equivalent of watching circus acrobats. And, even more amazing, it's certainly not lonely when it comes to quality.Anyone, and I mean anyone, who can sing the line, &quot;Where's the harm in voicing a doubt? You'll find me in the lavatory&quot; and make it sound so angelic deserves all the accolades around. That's from &quot;You're Not The Only One I Know&quot; and equally dazzling are &quot;Can't Be Sure&quot;, &quot;I Kicked A Boy&quot; and &quot;Joy&quot;.I may have given the impression that David Gavurin, Paul Brindley and Patrick Hannan are all incidental when compared to Wheeler's voice but that isn't the case. The music may appear simple but it's deceptively so. It provides pace and ambience and is the perfect framework for Wheeler, I especially like the way the music actually feels like it's tripping over itself on &quot;Hideous Towns&quot;.Sadly, The Sundays would never reach the heights of Reading, Writing And Arithmetic again but if you only release one album of this quality you can be rightly proud of yourself." wrapText="true">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+      <Button layoutX="317.0" layoutY="718.0" mnemonicParsing="false" onAction="#movieOnActionButton" prefHeight="56.0" prefWidth="575.0" style="-fx-background-color: #C7631C;" styleClass="mouse-moved3" stylesheets="@../../../css/newStyles.css" text="Expand review" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <HBox alignment="CENTER" layoutX="27.0" layoutY="483.0" spacing="5.0">
+         <children>
+            <Label fx:id="ratingPoint" text="3.72">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="fromNumverOfRating" prefHeight="17.0" prefWidth="110.0" text="from 9,267 ratings" />
+         </children>
+      </HBox>
+      <Label fx:id="e2" layoutX="27.0" layoutY="511.0" text="Genre">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <HBox layoutX="27.0" layoutY="544.0" spacing="5.0">
+         <children>
+            <Label fx:id="movieGenre" style="-fx-border-radius: 7; -fx-border-color: transparent; -fx-background-radius: 7; -fx-background-color: #fe9731;" stylesheets="@../../../css/newStyles.css" text="philosophy">
+               <font>
+                  <Font name="Calibri" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="10.0" layoutY="10.0" style="-fx-border-radius: 7; -fx-border-color: transparent; -fx-background-radius: 7; -fx-background-color: #fe9731;" stylesheets="@../../../css/newStyles.css" text="Satire">
+               <font>
+                  <Font name="Calibri" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="10.0" layoutY="10.0" style="-fx-border-radius: 7; -fx-border-color: transparent; -fx-background-radius: 7; -fx-background-color: #fe9731;" stylesheets="@../../../css/newStyles.css" text="Political">
+               <font>
+                  <Font name="Calibri" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="148.0" layoutY="10.0" style="-fx-border-radius: 7; -fx-border-color: transparent; -fx-background-radius: 7; -fx-background-color: #fe9731;" stylesheets="@../../../css/newStyles.css" text="+1">
+               <font>
+                  <Font name="Calibri" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

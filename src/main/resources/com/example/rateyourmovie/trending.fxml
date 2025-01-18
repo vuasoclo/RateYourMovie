@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="trendingModel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="266.0" style="-fx-background-color: FF5056;" stylesheets="@../../../css/newStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.rateyourmovie.TrendingController">
+   <children>
+      <ImageView fx:id="coverImage" fitHeight="323.0" fitWidth="209.0" layoutX="28.0" layoutY="14.0">
+         <image>
+            <Image url="@../../../images/sh.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="movieName" alignment="CENTER" contentDisplay="CENTER" layoutX="27.0" layoutY="337.0" prefHeight="52.0" prefWidth="209.0" text="#1. ShawShank Redemsadasdasdddasdsad" wrapText="true">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="movieDirector" alignment="CENTER" contentDisplay="CENTER" layoutX="26.0" layoutY="422.0" prefHeight="21.0" prefWidth="209.0" text="ShawShank Redemption">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER" layoutX="71.0" layoutY="391.0" prefHeight="31.0" prefWidth="124.0" spacing="3.0">
+         <children>
+            <ImageView fitHeight="24.0" fitWidth="24.0">
+               <image>
+                  <Image url="@../../../icon/icons8-star-96.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="rateingPoint" text="3.14" wrapText="true">
+               <font>
+                  <Font name="Cambria Bold" size="23.0" />
+               </font>
+            </Label>
+            <Label fx:id="numberRate" text="/4k" textFill="WHITE" wrapText="true">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <Button mnemonicParsing="false" onAction="#trendingButtonOnAction" prefHeight="450.0" prefWidth="266.0" style="-fx-background-color: transparent;" stylesheets="@../../../css/newStyles.css">
+         <styleClass>
+            <String fx:value="mouse-moved2" />
+            <String fx:value="round-layout" />
+         </styleClass>
+      </Button>
+   </children>
+   <styleClass>
+      <String fx:value="shadow" />
+      <String fx:value="round-layout" />
+   </styleClass>
+</AnchorPane>

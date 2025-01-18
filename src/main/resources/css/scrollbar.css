@@ -1,0 +1,34 @@
+.scroll-pane {
+    -fx-background: transparent; /* Nền của ScrollPane */
+    -fx-padding: 10; /* Khoảng cách bên trong */
+}
+
+.scroll-bar {
+    -fx-background-color: transparent; /* Nền của thanh trượt */
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 8px; /* Độ rộng của thanh trượt dọc */
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 8px; /* Độ cao của thanh trượt ngang */
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #FFDE59; /* Màu của thanh kéo */
+    -fx-background-radius: 4px; /* Góc bo của thanh kéo */
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #F6D54E; /* Màu khi hover */
+}
+
+.scroll-bar .track {
+    -fx-background-color: #E0E0E0; /* Màu nền của đường trượt */
+    -fx-background-radius: 4px; /* Góc bo của đường trượt */
+}
+
+.scroll-bar .track:hover {
+    -fx-background-color: #BDBDBD; /* Màu nền khi hover */
+}

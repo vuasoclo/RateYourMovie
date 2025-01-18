@@ -1,0 +1,38 @@
+/* General styling for the ChoiceBox */
+.choice-box {
+    -fx-background-color: #ffffff; /* White background */
+    -fx-border-color: #dcdcdc;    /* Light gray border */
+    -fx-border-radius: 8px;       /* Rounded corners */
+    -fx-background-radius: 8px;
+    -fx-padding: 5 10;            /* Inner padding */
+    -fx-font-size: 14px;          /* Font size */
+    -fx-font-family: "Segoe UI", sans-serif; /* Modern font */
+    -fx-text-fill: #333;          /* Dark text color */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0, 0, 4); /* Subtle shadow */
+    -fx-pref-height: 12px;        /* Default height */
+}
+
+/* Hover effect */
+.choice-box:hover {
+    -fx-border-color: #bbbbbb;    /* Slightly darker border */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 5); /* Stronger shadow on hover */
+}
+
+/* Focus effect */
+.choice-box:focused {
+    -fx-border-color: #4a90e2;    /* Blue border on focus */
+    -fx-effect: dropshadow(gaussian, rgba(74, 144, 226, 0.6), 10, 0, 0, 5); /* Blue shadow */
+}
+
+/* Drop-down menu styling */
+.choice-box .list-cell {
+    -fx-background-color: #ffffff; /* Keep the drop-down white */
+    -fx-text-fill: #333;           /* Dark text color */
+    -fx-padding: 5 10;
+}
+
+/* Drop-down menu hover effect */
+.choice-box .list-cell:hover {
+    -fx-background-color: #f0f0f0; /* Light gray hover background */
+    -fx-text-fill: #000;           /* Slightly darker text color */
+}

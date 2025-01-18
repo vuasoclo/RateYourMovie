@@ -1,0 +1,22 @@
+/* Định dạng button */
+.button {
+    -fx-background-color: linear-gradient(#e6e6e6, #ffffff); /* Gradient màu nền */
+    -fx-background-radius: 50%; /* Biến thành hình tròn */
+    -fx-padding: 10px; /* Khoảng cách bên trong */
+    -fx-border-color: #d1d1d1; /* Màu viền */
+    -fx-border-radius: 50%; /* Làm viền bo tròn */
+    -fx-cursor: hand; /* Thay đổi con trỏ khi hover */
+}
+
+/* Hiệu ứng hover */
+.button:hover {
+    -fx-background-color: linear-gradient(#ffffff, #e6e6e6);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 7, 0.5, 0, 1);
+}
+
+/* Hiệu ứng khi nhấn */
+.button:pressed {
+    -fx-background-color: linear-gradient(#d9d9d9, #f2f2f2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 3, 0.5, 0, 1);
+}
+
