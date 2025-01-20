@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="topMovieModel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="138.0" prefWidth="745.0" stylesheets="@../../../css/newStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.rateyourmovie.TopMovieController">
+<AnchorPane fx:id="topMovieModel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="138.0" prefWidth="745.0" stylesheets="@../../../css/newStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.rateyourmovie.TopResultController">
    <children>
       <Label fx:id="movieTopId" layoutX="41.0" layoutY="14.0" prefHeight="30.0" prefWidth="28.0" text="1">
          <font>
@@ -18,15 +18,15 @@
       </Label>
       <ImageView fx:id="movieImg" fitHeight="120.0" fitWidth="83.0" layoutX="69.0" layoutY="9.0">
          <image>
-            <Image url="@../../../images/odc.png" />
+            <Image url="@../../../images/7589847.jpg" />
          </image>
       </ImageView>
-      <Label fx:id="movieName" layoutX="160.0" layoutY="15.0" prefHeight="31.0" prefWidth="635.0" text="ShawShank Redemption" textFill="#bf671e" wrapText="true">
+      <Label fx:id="movieName" layoutX="160.0" layoutY="15.0" prefHeight="31.0" prefWidth="409.0" text="ShawShank Redemption" textFill="#bf671e" wrapText="true">
          <font>
             <Font name="Cambria" size="25.0" />
          </font>
       </Label>
-      <Label fx:id="movieDirector" layoutX="160.0" layoutY="46.0" prefHeight="26.0" prefWidth="511.0" text="ShawShank Red" textFill="#fe9731">
+      <Label fx:id="movieDirector" layoutX="160.0" layoutY="46.0" prefHeight="26.0" prefWidth="396.0" text="ShawShank Red" textFill="#fe9731">
          <font>
             <Font name="Calibri Bold" size="22.0" />
          </font>
@@ -36,11 +36,11 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutX="558.0" layoutY="48.0" prefHeight="31.0" prefWidth="124.0" spacing="3.0">
+      <HBox alignment="CENTER" layoutX="558.0" layoutY="52.0" prefHeight="31.0" prefWidth="124.0" spacing="3.0">
          <children>
-            <ImageView fitHeight="24.0" fitWidth="24.0">
+            <ImageView fitHeight="20.0" fitWidth="20.0">
                <image>
-                  <Image url="@../../../icon/icons8-star-96.png" />
+                  <Image url="@../../../icon/icons8-star-50.png" />
                </image>
             </ImageView>
             <Label fx:id="rateingPoint" text="3.14" wrapText="true">

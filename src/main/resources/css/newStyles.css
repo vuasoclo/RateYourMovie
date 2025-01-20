@@ -25,3 +25,8 @@
     -fx-border-color: #060270;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 3, 0.5, 0, 1);
 }
+
+.round-layout-genre {
+    -fx-border-radius: 9;
+    -fx-background-radius: 9;
+}

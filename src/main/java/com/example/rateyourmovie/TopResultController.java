@@ -8,18 +8,18 @@ import model.Movie;
 
 import java.text.SimpleDateFormat;
 
-public class TopMovieController {
+public class TopResultController {
     @FXML
     private Label movieDirector;
-
-    @FXML
-    private Label movieTopId;
 
     @FXML
     private ImageView movieImg;
 
     @FXML
     private Label movieName;
+
+    @FXML
+    private Label movieTopId;
 
     @FXML
     private Label movieYear;
@@ -32,6 +32,9 @@ public class TopMovieController {
 
     @FXML
     private Label rateingPoint;
+
+    @FXML
+    private AnchorPane topMovieModel;
 
     public void setData(Movie movie){
         movieImg.setImage(movie.getCover());
@@ -55,10 +58,9 @@ public class TopMovieController {
         numberReview.setStyle("-fx-text-fill: black");
         rateingPoint.setStyle("-fx-text-fill: black");
         movieTopId.setStyle("-fx-text-fill: black");
-
-    }
-    public void TopMovieButtonOnAction() {
-        // switch page
     }
 
+    public void TopMovieButtonOnAction(){
+
+    }
 }

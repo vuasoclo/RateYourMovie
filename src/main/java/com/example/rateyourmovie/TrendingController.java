@@ -28,7 +28,7 @@ public class TrendingController {
     private String [] colors = {"#FEBA54", "#B9E5FF", "#BDB2FE ", "#FB9AA8"};
     //set data
     public void setData(Movie movie){
-        coverImage.setImage(movie.getCover().getImage());
+        coverImage.setImage(movie.getCover());
         movieName.setText(movie.getName());
         movieDirector.setText(movie.getDirector());
         numberRate.setText(String.format("/%.1fk", (double) movie.getNumberOfRate() / 1000));

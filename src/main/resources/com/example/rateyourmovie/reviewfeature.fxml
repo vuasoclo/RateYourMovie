@@ -12,7 +12,7 @@
    <children>
       <ImageView fx:id="movieImg" fitHeight="455.0" fitWidth="280.0" layoutX="14.0" layoutY="14.0">
          <image>
-            <Image url="@../../../images/sh.png" />
+            <Image url="@../../../images/7589847.jpg" />
          </image>
       </ImageView>
       <HBox layoutX="314.0" layoutY="26.0">
@@ -84,29 +84,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <HBox layoutX="27.0" layoutY="544.0" spacing="5.0">
-         <children>
-            <Label fx:id="movieGenre" style="-fx-border-radius: 7; -fx-border-color: transparent; -fx-background-radius: 7; -fx-background-color: #fe9731;" stylesheets="@../../../css/newStyles.css" text="philosophy">
-               <font>
-                  <Font name="Calibri" size="18.0" />
-               </font>
-            </Label>
-            <Label layoutX="10.0" layoutY="10.0" style="-fx-border-radius: 7; -fx-border-color: transparent; -fx-background-radius: 7; -fx-background-color: #fe9731;" stylesheets="@../../../css/newStyles.css" text="Satire">
-               <font>
-                  <Font name="Calibri" size="18.0" />
-               </font>
-            </Label>
-            <Label layoutX="10.0" layoutY="10.0" style="-fx-border-radius: 7; -fx-border-color: transparent; -fx-background-radius: 7; -fx-background-color: #fe9731;" stylesheets="@../../../css/newStyles.css" text="Political">
-               <font>
-                  <Font name="Calibri" size="18.0" />
-               </font>
-            </Label>
-            <Label layoutX="148.0" layoutY="10.0" style="-fx-border-radius: 7; -fx-border-color: transparent; -fx-background-radius: 7; -fx-background-color: #fe9731;" stylesheets="@../../../css/newStyles.css" text="+1">
-               <font>
-                  <Font name="Calibri" size="18.0" />
-               </font>
-            </Label>
-         </children>
-      </HBox>
+      <HBox fx:id="hBox1" alignment="CENTER_LEFT" layoutX="25.0" layoutY="544.0" prefHeight="32.0" prefWidth="286.0" spacing="9.0" />
+      <HBox fx:id="hBox2" alignment="CENTER_LEFT" layoutX="27.0" layoutY="580.0" prefHeight="32.0" prefWidth="145.0" spacing="9.0" />
    </children>
 </AnchorPane>

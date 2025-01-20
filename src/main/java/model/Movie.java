@@ -1,29 +1,41 @@
 package model;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class Movie {
     private int id;
     private String name;
-    private ImageView cover;
+    private Image cover;
     private String director;
-    private String genre;
+    private List<String> genres;
     private double rating;
-    private int year;
+    private Date release_date;
     private int numberOfRate;
+    private int runtime;
 
-    public Movie(int id, String name, ImageView cover, String director, String genre, double rating, int year, int numberOfRate){
-        this.id = id;
-        this.name = name;
-        this.cover = cover;
-        this.director = director;
-        this.genre = genre;
-        this.rating = rating;
-        this.year = year;
-        this.numberOfRate = numberOfRate;
+    public Date getRelease_date() {
+        return release_date;
     }
-    public Movie(){
 
+    public void setRelease_date(Date release_date) {
+        this.release_date = release_date;
+    }
+
+    public int getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
+    }
+
+    public Movie() {
+        this.genres = new ArrayList<>();
     }
 
     public int getId() {
@@ -41,10 +53,10 @@ public class Movie {
         this.name = name;
     }
 
-    public ImageView getCover() {
+    public Image getCover() {
         return cover;
     }
-    public void setCover(ImageView cover) {
+    public void setCover(Image cover) {
         this.cover = cover;
     }
 
@@ -56,14 +68,6 @@ public class Movie {
         this.director = director;
     }
 
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
     public double getRating() {
         return rating;
     }
@@ -72,19 +76,19 @@ public class Movie {
         this.rating = rating;
     }
 
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
     public int getNumberOfRate() {
         return numberOfRate;
     }
 
     public void setNumberOfRate(int numberOfRate) {
         this.numberOfRate = numberOfRate;
+    }
+
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<String> genres) {
+        this.genres = genres;
     }
 }

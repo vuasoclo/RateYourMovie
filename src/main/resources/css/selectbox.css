@@ -36,3 +36,14 @@
     -fx-background-color: #f0f0f0; /* Light gray hover background */
     -fx-text-fill: #000;           /* Slightly darker text color */
 }
+
+.choice-box .thumb {
+    -fx-background-color: #F7E088; /* Màu của thanh kéo */
+    -fx-background-radius: 4px; /* Góc bo của thanh kéo */
+    -fx-pref-width: 3px; /* Độ rộng của thanh trượt dọc */
+
+}
+
+.choice-box .thumb:hover {
+    -fx-background-color: #F6D54E; /* Màu khi hover */
+}

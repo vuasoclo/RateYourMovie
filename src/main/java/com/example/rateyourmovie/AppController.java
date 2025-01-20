@@ -1,52 +1,123 @@
 package com.example.rateyourmovie;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import model.Movie;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.sql.Date;
+import java.util.*;
 
 public class AppController implements Initializable {
     @FXML
-    private Button minimizeButton, closeButton;
+    private AnchorPane main_stage;
     @FXML
-    private VBox trendingBox;
+    private Button logoutButton;
+
+    @FXML
+    private Button closeButton;
+
+    @FXML
+    private Button minimizeButton;
+
     @FXML
     private VBox reviewFeatureBox;
+
     @FXML
     private VBox topMovieBox;
+
+    @FXML
+    private VBox topResultBox;
+
+    @FXML
+    private VBox trendingBox;
+//add
+    @FXML
+    private ImageView movieImg;
+
+    @FXML
+    private TextField add_NORTextField;
+
+    @FXML
+    private TextField add_RuntimeTextField;
+
+    @FXML
+    private ComboBox<Double> add_comboBoxRate;
+
+    @FXML
+    private ComboBox<String> add_comboBoxSelectTag;
+
+    @FXML
+    private TextField add_directedTextField;
+
+    @FXML
+    private VBox add_genreBox;
+
+    @FXML
+    private TextField add_nameTextField;
+
+    @FXML
+    private TextField add_newGenreTextField;
+
+    @FXML
+    private DatePicker add_realease_dateTextField;
+
+    @FXML
+    private Label add_messageLabel;
+
+    @FXML
+    private Label add_messageLabel1;
+
+    @FXML
+    private Button add_addButton;
+
+    @FXML
+    private TextArea descriptionTextField;
+//
+    private double x = 0;
+    private double y = 0;
+    private String add_ImagePath;
+    private Movie add_movie = new Movie();
+    private Set<String> add_genres = new HashSet<>();
 
     private List<Movie> trendingMovies;
     private List<Movie> reviewFeatureMovies; // change to child of movie and acc TO-DO or combine list so dont need to change
     private List<Movie> topMovies;
+    private List<Movie> topResult;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         getScrollPaneTrendingMovie();
         getScrollPaneReviewFeatureMovie();
         getScrollPaneTopMovie();
+        getScrollPaneTopResult();
+        add_initComboBoxSelectTag();
+        add_initComboBoxRate();
+
     }
 
     public void getScrollPaneTrendingMovie(){
         trendingMovies = new ArrayList<>();
         try {
-            trendingMovies.addAll(getTrendingMovies());
+            trendingMovies.addAll(getMovieFromDB());
             for (Movie movie : trendingMovies) {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("trending.fxml"));
@@ -56,6 +127,7 @@ public class AppController implements Initializable {
                 trendingBox.getChildren().add(trendingModel);
             }
         } catch (SQLException e) {
+
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,7 +136,7 @@ public class AppController implements Initializable {
     public void getScrollPaneReviewFeatureMovie(){
         reviewFeatureMovies = new ArrayList<>();
         try {
-            reviewFeatureMovies.addAll(getTrendingMovies());
+            reviewFeatureMovies.addAll(getMovieFromDB());
             for (Movie movie : reviewFeatureMovies) {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("reviewfeature.fxml"));
@@ -84,7 +156,7 @@ public class AppController implements Initializable {
     public void getScrollPaneTopMovie(){
         topMovies = new ArrayList<>();
         try {
-            topMovies.addAll(getTrendingMovies());
+            topMovies.addAll(getMovieFromDB());
             for (Movie movie : topMovies) {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("topmovie.fxml"));
@@ -100,10 +172,27 @@ public class AppController implements Initializable {
         }
     }
 
-
-
+    public void getScrollPaneTopResult(){
+        //generate top result as above but change name
+        topResult = new ArrayList<>();
+        try {
+            topResult.addAll(getMovieFromDB());
+            for (Movie movie : topResult) {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("topresult.fxml"));
+                AnchorPane topResultModel = loader.load();
+                TopResultController topResultController = loader.getController();
+                topResultController.setData(movie);
+                topResultBox.getChildren().add(topResultModel);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void minimize(){
-        Stage minimizeStage = (Stage) minimizeButton.getScene().getWindow();
+        Stage minimizeStage = (Stage) main_stage.getScene().getWindow();
         minimizeStage.setIconified(true);
     }
     public void cancelButtonAction() {
@@ -113,70 +202,246 @@ public class AppController implements Initializable {
     }
 
     //switch page
-    // logout
     public void logoutButtonOnAction(){
+        //generate code
+        try {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to logout?");
+            Optional<ButtonType> option = alert.showAndWait();
 
+            if (option.get().equals(ButtonType.OK)) {
+                // HIDE THE DASHBOARD FORM
+                logoutButton.getScene().getWindow().hide();
+                // LINK YOUR LOGIN FORM
+                Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
+                Stage loginStage = new Stage();
+                Scene scene = new Scene(root);
+
+                root.setOnMousePressed((MouseEvent event) -> {
+                    x = event.getSceneX();
+                    y = event.getSceneY();
+                });
+
+                root.setOnMouseDragged((MouseEvent event) -> {
+                    loginStage.setX(event.getScreenX() - x);
+                    loginStage.setY(event.getScreenY() - y);
+
+                    loginStage.setOpacity(.8);
+                });
+
+                root.setOnMouseReleased((MouseEvent event) -> {
+                    loginStage.setOpacity(1);
+                });
+
+                loginStage.initStyle(StageStyle.TRANSPARENT);
+
+                loginStage.setScene(scene);
+                loginStage.show();
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
 
     //home page
-    // trending
-    private List<Movie> getTrendingMovies() throws SQLException {
+    private List<Movie> getMovieFromDB() throws SQLException {
         List<Movie> lsmovies = new ArrayList<>();
 
         DatabaseConnection connectNow = new DatabaseConnection();
         Connection connectionDB = connectNow.getConnection();
 
-        String query = "SELECT name, cover, director, genre, rating, year, numberOfRate FROM movie WHERE movie_id = ?";
-        try (PreparedStatement preparedStatement = connectionDB.prepareStatement(query)) {
-            int idx = 1;
-            while (true) {
-                preparedStatement.setInt(1, idx);
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (!resultSet.next()) {
-                        break;
-                    }
-                    Movie movie = new Movie();
-                    movie.setName(resultSet.getString("name"));
-                    ImageView image = new ImageView(new Image(resultSet.getBlob("cover").getBinaryStream()));
-                    movie.setCover(image);
-                    movie.setDirector(resultSet.getString("director"));
-                    movie.setGenre(resultSet.getString("genre"));
-                    movie.setRating(resultSet.getDouble("rating"));
-                    movie.setYear(resultSet.getInt("year"));
-                    movie.setNumberOfRate(resultSet.getInt("numberOfRate"));
+        String query = "SELECT movie_id, name, cover, release_date, director, runtime, rating, numberOfRate FROM movie";
+        String sqlGenre = """
+        SELECT g.name
+        FROM genre g
+        JOIN movie_genre mg ON g.genre_id = mg.genre_id
+        WHERE mg.movie_id = ?;
+    """;
 
-                    lsmovies.add(movie);
+        // Fetch movies
+        try (PreparedStatement preparedStatement = connectionDB.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Movie movie = new Movie();
+                movie.setId(resultSet.getInt("movie_id"));
+                movie.setName(resultSet.getString("name"));
+
+                // Handle cover image
+                Blob coverBlob = resultSet.getBlob("cover");
+                if (coverBlob != null) {
+                    Image image = new Image(coverBlob.getBinaryStream());
+                    movie.setCover(image);
                 }
 
-                idx++;
+                movie.setRuntime(resultSet.getInt("runtime"));
+                movie.setDirector(resultSet.getString("director"));
+                movie.setRating(resultSet.getDouble("rating"));
+                // Convert release_date (DATE) to String
+                movie.setRelease_date(resultSet.getDate("release_date"));
+                movie.setNumberOfRate(resultSet.getInt("numberOfRate"));
+
+                movie.setGenres(new ArrayList<>()); // Initialize genres list
+                lsmovies.add(movie);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // Fetch genres for each movie
+        try (PreparedStatement preparedStatementGenre = connectionDB.prepareStatement(sqlGenre)) {
+            for (Movie movie : lsmovies) {
+                preparedStatementGenre.setInt(1, movie.getId());
+                try (ResultSet resultSet = preparedStatementGenre.executeQuery()) {
+                    while (resultSet.next()) {
+                        String genretmp = resultSet.getString("name");
+                        movie.getGenres().add(genretmp);
+                        add_genres.add(genretmp);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return lsmovies;
+    }
+
+    //add movie
+    public void add_importButtonOnAction() {
+        FileChooser open = new FileChooser();
+        open.setTitle("Import Image File");
+        open.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File", "*jpg", "*png"));
+
+        File file = open.showOpenDialog(main_stage.getScene().getWindow());
+
+        if(file != null){
+            Image image = new Image(file.toURI().toString());
+
+            movieImg.setImage(image);
+            add_movie.setCover(image);
+
+            add_ImagePath = file.getAbsolutePath();
+        }
+        else{
+            add_messageLabel.setText("invalid file");
+        }
+    }
+
+    public void add_resetButtonOnAction() {
+        add_messageLabel.setText(null);
+        add_movie = new Movie();
+        add_ImagePath = "";
+        add_addButton.setDisable(true);
+        movieImg.setImage(null);
+        add_nameTextField.clear();
+        add_realease_dateTextField.getEditor().clear();
+        add_directedTextField.clear();
+        add_RuntimeTextField.clear();
+        add_newGenreTextField.clear();
+        descriptionTextField.clear();
+        add_comboBoxRate.getSelectionModel().clearSelection();
+        add_comboBoxSelectTag.getSelectionModel().clearSelection();
+        add_genreBox.getChildren().clear();
+    }
+
+    public void add_AddNewGenreButtonOnAction() {
+        if(add_newGenreTextField.getText().isEmpty()){
+            add_messageLabel1.setText("Please enter new genre");
+        }
+        else{
+            add_messageLabel1.setText("added on select tag");
+            add_comboBoxSelectTag.getItems().add(add_newGenreTextField.getText());
+        }
+    }
+
+    public void add_initComboBoxSelectTag() {
+        add_comboBoxSelectTag.setItems(FXCollections.observableArrayList(add_genres));
+    }
+    public void add_initComboBoxRate() {
+        add_comboBoxRate.setItems(FXCollections.observableArrayList(0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0));
+    }
+    public void add_comboBoxRateOnAction(){
+        add_movie.setRating(add_comboBoxRate.getSelectionModel().getSelectedItem());
+    }
+
+    public void add_comboBoxSelectTagOnAction(){
+        add_movie.getGenres().add(add_comboBoxSelectTag.getSelectionModel().getSelectedItem());
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("genre.fxml"));
+            Label genreModel = loader.load();
+            add_genreBox.getChildren().add(genreModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void add_saveButtonOnAction() {
+        try {
+            if (add_nameTextField.getText().isEmpty() ||
+                    add_realease_dateTextField.getValue() == null ||
+                    add_directedTextField.getText().isEmpty() ||
+                    add_RuntimeTextField.getText().isEmpty() ||
+                    add_comboBoxRate.getSelectionModel().isEmpty() ||
+                    movieImg.getImage() == null){
+
+                add_messageLabel.setText("Please fill all the fields");
+                return;
+            }
+
+            int runtime;
+            try {
+                runtime = Integer.parseInt(add_RuntimeTextField.getText());
+            } catch (NumberFormatException e) {
+                add_messageLabel.setText("Runtime must be an INT");
+                return;
+            }
+            int numberOfRate;
+            try {
+                numberOfRate = Integer.parseInt(add_NORTextField.getText());
+            } catch (NumberFormatException e) {
+                add_messageLabel.setText("ratings must be an INT");
+                return;
+            }
+
+            // Kiểm tra định dạng số thực cho Rating
+            double rating = add_comboBoxRate.getSelectionModel().getSelectedItem();
+
+
+            add_movie.setName(add_nameTextField.getText());
+            add_movie.setRelease_date(Date.valueOf(add_realease_dateTextField.getValue()));
+            add_movie.setDirector(add_directedTextField.getText());
+            add_movie.setRuntime(runtime);
+            add_movie.setRating(rating);
+            add_movie.setNumberOfRate(numberOfRate);
+            add_messageLabel.setText("Saved successfully");
+            add_addButton.setDisable(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void add_addButtonOnAction() {
+        add_messageLabel.setText("Movie added successfully");
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(event -> {
+            add_resetButtonOnAction();
+        });
+        pause.play();
+
     }
 
 
 //    private void addManully(){
 //        DatabaseConnection connectNow = new DatabaseConnection();
 //        Connection connectionDB = connectNow.getConnection();
-//
-//        // choose image
-////        FileChooser open = new FileChooser();
-////        open.setTitle("Import Image File");
-////        open.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File", "*jpg", "*png"));
-////
-////        File file = open.showOpenDialog(main_form.getScene().getWindow());
-////
-////        if(file != null){
-////            Image image = new Image(file.toURI().toString(), 118, 147, false, true);
-////
-////            String path = getData().path = file.getAbsolutePath();
-////        }
-//
-//
+
 //        String sql = "INSERT INTO movie (movie_id, name, cover, director, genre, rating, year, numberOfRate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 //        try (PreparedStatement pstmt = connectionDB.prepareStatement(sql)) {
 //            pstmt.setInt(1, 1);
@@ -198,5 +463,4 @@ public class AppController implements Initializable {
 //        }
 //    }
     //search feature
-
 }
