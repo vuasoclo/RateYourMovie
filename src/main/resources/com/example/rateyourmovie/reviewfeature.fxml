@@ -15,9 +15,9 @@
             <Image url="@../../../images/7589847.jpg" />
          </image>
       </ImageView>
-      <HBox layoutX="314.0" layoutY="26.0">
+      <HBox layoutX="314.0" layoutY="26.0" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="583.0" spacing="9.0">
          <children>
-            <Label fx:id="movieName" prefHeight="31.0" prefWidth="264.0" text="ShawShank Redemption" textFill="#bf671e" wrapText="true">
+            <Label fx:id="movieName" prefHeight="31.0" text="ShawShank Redemption" textFill="#bf671e" wrapText="true">
                <font>
                   <Font name="Cambria" size="25.0" />
                </font>
@@ -29,7 +29,7 @@
             </Label>
          </children>
       </HBox>
-      <Label fx:id="movieDirector" layoutX="314.0" layoutY="57.0" prefHeight="26.0" prefWidth="240.0" text="ShawShank Redemption" textFill="#fe9731">
+      <Label fx:id="movieDirector" layoutX="314.0" layoutY="57.0" text="ShawShank Redemption" textFill="#fe9731">
          <font>
             <Font name="Calibri Bold" size="22.0" />
          </font>
@@ -85,6 +85,6 @@
          </font>
       </Label>
       <HBox fx:id="hBox1" alignment="CENTER_LEFT" layoutX="25.0" layoutY="544.0" prefHeight="32.0" prefWidth="286.0" spacing="9.0" />
-      <HBox fx:id="hBox2" alignment="CENTER_LEFT" layoutX="27.0" layoutY="580.0" prefHeight="32.0" prefWidth="145.0" spacing="9.0" />
+      <HBox fx:id="hBox2" alignment="CENTER_LEFT" layoutX="23.0" layoutY="585.0" prefHeight="32.0" prefWidth="223.0" spacing="9.0" />
    </children>
 </AnchorPane>

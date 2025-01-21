@@ -2,6 +2,8 @@ package com.example.rateyourmovie;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -92,11 +95,58 @@ public class AppController implements Initializable {
     @FXML
     private TextArea descriptionTextField;
 //
+//    search
+    @FXML
+    private ComboBox<String> search_ComboBoxSelectTag;
+
+    @FXML
+    private ComboBox<String> search_ComboBoxSelectTag2;
+
+    @FXML
+    private HBox search_excludeTagBox;
+
+    @FXML
+    private HBox search_includeTagBox;
+    @FXML
+    private Button search_FromButton;
+    @FXML
+    private Button search_ToButton;
+    @FXML
+    private Slider search_slider;
+    @FXML
+    private Label search_yearLabel;
+    @FXML
+    private Label search_messegeLabel;
+
+//
+//    chart
+    @FXML
+    private ComboBox<String> chart_ComboBoxSelectTag;
+
+    @FXML
+    private ComboBox<String> chart_ComboBoxSelectTag2;
+
+    @FXML
+    private VBox chart_excludeBox;
+
+    @FXML
+    private VBox chart_includeBox;
+
+    @FXML
+    private Label chart_messageLabel;
+//
     private double x = 0;
     private double y = 0;
     private String add_ImagePath;
     private Movie add_movie = new Movie();
     private Set<String> add_genres = new HashSet<>();
+    private List<String> search_IncludeGenres = new ArrayList<>();
+    private List<String> search_ExcludeGenres = new ArrayList<>();
+    private int yearTemp;
+    private int search_includeOverload;
+    private int search_excludeOverload;
+    private List<String> chart_IncludeGenres = new ArrayList<>();
+    private List<String> chart_ExcludeGenres = new ArrayList<>();
 
     private List<Movie> trendingMovies;
     private List<Movie> reviewFeatureMovies; // change to child of movie and acc TO-DO or combine list so dont need to change
@@ -111,7 +161,8 @@ public class AppController implements Initializable {
         getScrollPaneTopResult();
         add_initComboBoxSelectTag();
         add_initComboBoxRate();
-
+        init3SearchComboBox();
+        chart_init();
     }
 
     public void getScrollPaneTrendingMovie(){
@@ -371,11 +422,20 @@ public class AppController implements Initializable {
     }
 
     public void add_comboBoxSelectTagOnAction(){
-        add_movie.getGenres().add(add_comboBoxSelectTag.getSelectionModel().getSelectedItem());
+        String selectedItem = add_comboBoxSelectTag.getSelectionModel().getSelectedItem();
+        for(String x : add_movie.getGenres()){
+            if(x.equals(selectedItem)){
+                add_messageLabel.setText("Genre already added");
+                return;
+            }
+        }
+        add_movie.getGenres().add(selectedItem);
         try{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("genre.fxml"));
             Label genreModel = loader.load();
+            GenreController genreController = loader.getController();
+            genreController.setData(selectedItem);
             add_genreBox.getChildren().add(genreModel);
         } catch (Exception e) {
             e.printStackTrace();
@@ -437,7 +497,199 @@ public class AppController implements Initializable {
 
     }
 
+//    search feature
 
+
+    public void search_ApplyButtonOnAction(){
+        if(Integer.valueOf(search_FromButton.getText()) > Integer.valueOf(search_ToButton.getText())){
+            search_messegeLabel.setText("From year must be smaller than To year");
+            return;
+        }
+    }
+    public void search_ResetButtonOnAction(){
+        search_IncludeGenres.clear();
+        search_ExcludeGenres.clear();
+        search_includeTagBox.getChildren().clear();
+        search_excludeTagBox.getChildren().clear();
+        search_includeOverload = 0;
+        search_excludeOverload = 0;
+        yearTemp = 1960;
+        search_yearLabel.setText(String.valueOf(yearTemp));
+        //button
+        search_FromButton.setText("From");
+        search_ToButton.setText("To");
+    }
+    public void init3SearchComboBox(){
+        search_includeOverload = 0;
+        search_excludeOverload = 0;
+        yearTemp = (int) search_slider.getValue();
+        search_yearLabel.setText(String.valueOf(yearTemp));
+        search_ComboBoxSelectTag.setItems(FXCollections.observableArrayList(add_genres));
+        search_ComboBoxSelectTag2.setItems(FXCollections.observableArrayList(add_genres));
+        search_slider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                yearTemp = (int) search_slider.getValue();
+                search_yearLabel.setText(String.valueOf(yearTemp));
+            }
+        });
+    }
+    public void search_ComboBoxSelectTagOnAction() {
+        search_messegeLabel.setText(null);
+        String selectedItem = search_ComboBoxSelectTag.getSelectionModel().getSelectedItem();
+
+        for (String x : search_IncludeGenres) {
+            if (x.equals(selectedItem)) {
+                search_messegeLabel.setText("Genre already selected");
+                return;
+            }
+        }
+
+        search_IncludeGenres.add(selectedItem);
+
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("genre.fxml"));
+            Label genreModel = loader.load();
+            GenreController genreController = loader.getController();
+            genreController.setData(selectedItem);
+
+            if (search_IncludeGenres.size() > 3) {
+                if (search_includeOverload == 1) {
+                    // update overload component
+                    Label overloadLabel = (Label) search_includeTagBox.getChildren()
+                            .get(search_includeTagBox.getChildren().size() - 1);
+                    overloadLabel.setText("+" + (search_IncludeGenres.size() - 3));
+                } else {
+                    // add new overload component
+                    genreModel.setText("+" + (search_IncludeGenres.size() - 3));
+                    search_includeOverload = 1;
+                    search_includeTagBox.getChildren().add(genreModel);
+                }
+            } else {
+                // add normal component
+                search_includeTagBox.getChildren().add(genreModel);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Xóa tag đã chọn khỏi ComboBox
+        search_ComboBoxSelectTag2.getItems().remove(selectedItem);
+    }
+
+    public void search_ComboBoxSelectTagOnAction2() {
+        search_messegeLabel.setText(null);
+        String selectedItem = search_ComboBoxSelectTag2.getSelectionModel().getSelectedItem();
+        for(String x : search_ExcludeGenres){
+            if(x.equals(selectedItem)){
+                search_messegeLabel.setText("Genre already selected");
+                return;
+            }
+        }
+        search_ExcludeGenres.add(selectedItem);
+
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("genre.fxml"));
+            Label genreModel = loader.load();
+            GenreController genreController = loader.getController();
+            genreController.setData(selectedItem);
+
+            if (search_ExcludeGenres.size() > 3) {
+                if (search_excludeOverload == 1) {
+                    // update overload component
+                    Label overloadLabel = (Label) search_excludeTagBox.getChildren()
+                            .get(search_excludeTagBox.getChildren().size() - 1);
+                    overloadLabel.setText("+" + (search_ExcludeGenres.size() - 3));
+                } else {
+                    // add new overload component
+                    genreModel.setText("+" + (search_ExcludeGenres.size() - 3));
+                    search_excludeOverload = 1;
+                    search_excludeTagBox.getChildren().add(genreModel);
+                }
+            } else {
+                // add normal component
+                search_excludeTagBox.getChildren().add(genreModel);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        search_ComboBoxSelectTag.getItems().remove(selectedItem);
+    }
+
+    public void search_FromButtonOnAction(){
+        search_FromButton.setText(String.valueOf(yearTemp));
+    }
+    public void search_ToButtonOnAction(){
+        search_ToButton.setText(String.valueOf(yearTemp));
+    }
+
+//chart feature
+
+
+    public void chart_init(){
+        chart_ComboBoxSelectTag.setItems(FXCollections.observableArrayList(add_genres));
+        chart_ComboBoxSelectTag2.setItems(FXCollections.observableArrayList(add_genres));
+    }
+    public void chart_ComboBoxSelectTagOnAction() {
+
+        String selectedItem = chart_ComboBoxSelectTag.getSelectionModel().getSelectedItem();
+        for(String x : chart_IncludeGenres){
+            if(x.equals(selectedItem)){
+                chart_messageLabel.setText("Genre already selected");
+                return;
+            }
+        }
+        chart_IncludeGenres.add(selectedItem);
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("genre.fxml"));
+            Label genreModel = loader.load();
+            GenreController genreController = loader.getController();
+            genreController.setData(selectedItem);
+            chart_includeBox.getChildren().add(genreModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        chart_ComboBoxSelectTag2.getItems().remove(selectedItem);
+    }
+
+    public void chart_ComboBoxSelectTagOnAction2() {
+        String selectedItem = chart_ComboBoxSelectTag2.getSelectionModel().getSelectedItem();
+        for(String x : chart_ExcludeGenres){
+            if(x.equals(selectedItem)){
+                chart_messageLabel.setText("Genre already selected");
+                return;
+            }
+        }
+        chart_ExcludeGenres.add(selectedItem);
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("genre.fxml"));
+            Label genreModel = loader.load();
+            GenreController genreController = loader.getController();
+            genreController.setData(selectedItem);
+            chart_excludeBox.getChildren().add(genreModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        chart_ComboBoxSelectTag.getItems().remove(selectedItem);
+    }
+
+    public void chart_ApplyButtonOnAction() {
+
+    }
+
+    public void chart_ResetButtonOnAction() {
+        chart_IncludeGenres.clear();
+        chart_ExcludeGenres.clear();
+        chart_includeBox.getChildren().clear();
+        chart_excludeBox.getChildren().clear();
+    }
+
+    //
 //    private void addManully(){
 //        DatabaseConnection connectNow = new DatabaseConnection();
 //        Connection connectionDB = connectNow.getConnection();
@@ -462,5 +714,4 @@ public class AppController implements Initializable {
 //            e.printStackTrace();
 //        }
 //    }
-    //search feature
 }

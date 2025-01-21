@@ -5,8 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.text.Font?>
 
-
-<Label alignment="CENTER" prefHeight="30.0" stylesheets="@../../../css/newStyles.css" text="Action" wrapText="true" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Label fx:id="genreLabel" alignment="CENTER" prefHeight="30.0" style="-fx-background-color: FEBA54;" stylesheets="@../../../css/newStyles.css" text="Action" wrapText="true" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.rateyourmovie.GenreController">
    <padding>
       <Insets left="10.0" right="10.0" />
    </padding>
