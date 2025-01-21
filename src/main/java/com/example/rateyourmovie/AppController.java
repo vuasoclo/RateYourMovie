@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -52,6 +53,22 @@ public class AppController implements Initializable {
 
     @FXML
     private VBox trendingBox;
+
+    @FXML
+    private AnchorPane home_form, add_form, search_form, chart_form;
+
+    @FXML
+    private Button home_button, add_button, chart_button;
+    @FXML
+    private TextField search_TextField;
+    @FXML
+    private ImageView bar_addIcon;
+
+    @FXML
+    private ImageView bar_chartIcon;
+
+    @FXML
+    private ImageView bar_homeIcon;
 //add
     @FXML
     private ImageView movieImg;
@@ -148,6 +165,7 @@ public class AppController implements Initializable {
     private List<String> chart_IncludeGenres = new ArrayList<>();
     private List<String> chart_ExcludeGenres = new ArrayList<>();
 
+
     private List<Movie> trendingMovies;
     private List<Movie> reviewFeatureMovies; // change to child of movie and acc TO-DO or combine list so dont need to change
     private List<Movie> topMovies;
@@ -155,6 +173,7 @@ public class AppController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         getScrollPaneTrendingMovie();
         getScrollPaneReviewFeatureMovie();
         getScrollPaneTopMovie();
@@ -363,6 +382,68 @@ public class AppController implements Initializable {
         return lsmovies;
     }
 
+    public void setAdd_buttonDefault() {
+        add_button.setStyle("-fx-background-color: white");
+        add_button.setStyle("-fx-text-fill: black");
+        bar_addIcon.setImage(new Image(getClass().getResource("/icon/icons8-add-50 (1).png").toExternalForm()));
+    }
+
+    public void setHome_buttonDefault() {
+        home_button.setStyle("-fx-background-color: white");
+        home_button.setStyle("-fx-text-fill: black");
+        bar_homeIcon.setImage(new Image(getClass().getResource("/icon/icons8-home-50.png").toExternalForm()));
+    }
+
+    public void setChart_buttonDefault() {
+        chart_button.setStyle("-fx-background-color: white");
+        chart_button.setStyle("-fx-text-fill: black");
+        bar_chartIcon.setImage(new Image(getClass().getResource("/icon/icons8-win-50.png").toExternalForm()));
+    }
+
+    public void swithcForm(ActionEvent event) {
+        if (event.getSource() == home_button) {
+            home_button.setStyle("-fx-background-color: #D97145; -fx-text-fill: white;");
+
+            bar_homeIcon.setImage(new Image(getClass().getResource("/icon/icons8-home-50-white.png").toExternalForm()));
+            setAdd_buttonDefault();
+            setChart_buttonDefault();
+
+            home_form.setVisible(true);
+            add_form.setVisible(false);
+            search_form.setVisible(false);
+            chart_form.setVisible(false);
+        }
+        if (event.getSource() == add_button) {
+            add_button.setStyle("-fx-background-color: #D97145; -fx-text-fill: white;");
+            bar_addIcon.setImage(new Image(getClass().getResource("/icon/icons8-add-50-white.png").toExternalForm()));
+            setHome_buttonDefault();
+            setChart_buttonDefault();
+
+            add_form.setVisible(true);
+            home_form.setVisible(false);
+            search_form.setVisible(false);
+            chart_form.setVisible(false);
+
+
+        }
+        if (event.getSource() == chart_button) {
+            chart_button.setStyle("-fx-background-color: #D97145; -fx-text-fill: white;");
+            bar_chartIcon.setImage(new Image(getClass().getResource("/icon/icons8-win-50-white.png").toExternalForm()));
+            setHome_buttonDefault();
+            setAdd_buttonDefault();
+
+            chart_form.setVisible(true);
+            home_form.setVisible(false);
+            add_form.setVisible(false);
+            search_form.setVisible(false);
+        }
+        if (!search_TextField.getText().isEmpty()) {
+            search_form.setVisible(true);
+            home_form.setVisible(false);
+            add_form.setVisible(false);
+            chart_form.setVisible(false);
+        }
+    }
     //add movie
     public void add_importButtonOnAction() {
         FileChooser open = new FileChooser();
