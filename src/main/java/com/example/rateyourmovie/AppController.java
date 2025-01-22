@@ -25,7 +25,10 @@ import javafx.util.Duration;
 import model.Movie;
 import model.ReviewFilm;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.sql.*;
 import java.sql.Date;
@@ -79,9 +82,6 @@ public class AppController implements Initializable {
 
     @FXML
     private TextField add_RuntimeTextField;
-
-    @FXML
-    private ComboBox<Double> add_comboBoxRate;
 
     @FXML
     private ComboBox<String> add_comboBoxSelectTag;
@@ -191,7 +191,7 @@ public class AppController implements Initializable {
     private double y = 0;
     private String add_ImagePath;
     private Movie add_movie = new Movie();
-    private Set<String> add_genres = new HashSet<>();
+    private List<String> add_genres = new ArrayList<>();
     private List<String> search_IncludeGenres = new ArrayList<>();
     private List<String> search_ExcludeGenres = new ArrayList<>();
     private int yearTemp;
@@ -214,7 +214,6 @@ public class AppController implements Initializable {
         getScrollPaneTopMovie();
         getScrollPaneTopResult();
         add_initComboBoxSelectTag();
-        add_initComboBoxRate();
         init3SearchComboBox();
         chart_init();
     }
@@ -360,13 +359,6 @@ public class AppController implements Initializable {
         Connection connectionDB = connectNow.getConnection();
 
         String query = "SELECT movie_id, name, cover, release_date, director, runtime, rating, numberOfRate FROM movie";
-        String sqlGenre = """
-        SELECT g.name
-        FROM genre g
-        JOIN movie_genre mg ON g.genre_id = mg.genre_id
-        WHERE mg.movie_id = ?;
-    """;
-
         // Fetch movies
         try (PreparedStatement preparedStatement = connectionDB.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -396,8 +388,14 @@ public class AppController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        String sqlGenre = """
+        SELECT g.name, g.genre_id
+        FROM genre g
+        JOIN movie_genre mg ON g.genre_id = mg.genre_id
+        WHERE mg.movie_id = ?;
+    """;
         // Fetch genres for each movie
+        Set<String> tmp_add_genres = new HashSet<>();
         try (PreparedStatement preparedStatementGenre = connectionDB.prepareStatement(sqlGenre)) {
             for (Movie movie : lsmovies) {
                 preparedStatementGenre.setInt(1, movie.getId());
@@ -405,13 +403,14 @@ public class AppController implements Initializable {
                     while (resultSet.next()) {
                         String genretmp = resultSet.getString("name");
                         movie.getGenres().add(genretmp);
-                        add_genres.add(genretmp);
+                        tmp_add_genres.add(genretmp);
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        add_genres.addAll(tmp_add_genres);
 
         return lsmovies;
     }
@@ -491,6 +490,9 @@ public class AppController implements Initializable {
         }
     }
     //add movie
+    @FXML
+    private TextField add_RateTextField;
+
     public void add_importButtonOnAction() {
         FileChooser open = new FileChooser();
         open.setTitle("Import Image File");
@@ -523,8 +525,9 @@ public class AppController implements Initializable {
         add_RuntimeTextField.clear();
         add_newGenreTextField.clear();
         descriptionTextField.clear();
-        add_comboBoxRate.getSelectionModel().clearSelection();
-        add_comboBoxSelectTag.getSelectionModel().clearSelection();
+        add_RateTextField.clear();
+        add_NORTextField.clear();
+//        add_comboBoxSelectTag.getSelectionModel().clearSelection();
         add_genreBox.getChildren().clear();
     }
 
@@ -540,12 +543,6 @@ public class AppController implements Initializable {
 
     public void add_initComboBoxSelectTag() {
         add_comboBoxSelectTag.setItems(FXCollections.observableArrayList(add_genres));
-    }
-    public void add_initComboBoxRate() {
-        add_comboBoxRate.setItems(FXCollections.observableArrayList(0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0));
-    }
-    public void add_comboBoxRateOnAction(){
-        add_movie.setRating(add_comboBoxRate.getSelectionModel().getSelectedItem());
     }
 
     public void add_comboBoxSelectTagOnAction(){
@@ -575,7 +572,7 @@ public class AppController implements Initializable {
                     add_realease_dateTextField.getValue() == null ||
                     add_directedTextField.getText().isEmpty() ||
                     add_RuntimeTextField.getText().isEmpty() ||
-                    add_comboBoxRate.getSelectionModel().isEmpty() ||
+                    add_RateTextField.getText().isEmpty() ||
                     movieImg.getImage() == null){
 
                 add_messageLabel.setText("Please fill all the fields");
@@ -593,12 +590,17 @@ public class AppController implements Initializable {
             try {
                 numberOfRate = Integer.parseInt(add_NORTextField.getText());
             } catch (NumberFormatException e) {
-                add_messageLabel.setText("ratings must be an INT");
+                add_messageLabel.setText("ratings must be a INT");
                 return;
             }
 
-            // Kiểm tra định dạng số thực cho Rating
-            double rating = add_comboBoxRate.getSelectionModel().getSelectedItem();
+            double rating;
+            try {
+                rating = Double.parseDouble(add_RateTextField.getText());
+            } catch (NumberFormatException e) {
+                add_messageLabel.setText("Rating must be a DOUBLE");
+                return;
+            }
 
 
             add_movie.setName(add_nameTextField.getText());
@@ -615,13 +617,62 @@ public class AppController implements Initializable {
     }
 
     public void add_addButtonOnAction() {
-        add_messageLabel.setText("Movie added successfully");
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        HandleAddData();
         pause.setOnFinished(event -> {
             add_resetButtonOnAction();
         });
         pause.play();
 
+    }
+
+    public void HandleAddData(){
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectionDB = connectNow.getConnection();
+
+        if (connectionDB == null) {
+            System.out.println("Database connection failed!");
+            return;
+        }
+        File file = new File(add_ImagePath);
+        if (!file.exists()) {
+            System.out.println("Image file not found: " + add_ImagePath);
+            return;
+        }
+        String sql = "INSERT INTO movie (name, cover, release_date, director, runtime, rating, numberOfRate) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = connectionDB.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {  // Add RETURN_GENERATED_KEYS here
+            pstmt.setString(1, add_movie.getName());              // name
+            pstmt.setBlob(2, new FileInputStream(add_ImagePath));  // cover
+            pstmt.setDate(3, new java.sql.Date(add_movie.getRelease_date().getTime()));  // release_date
+            pstmt.setString(4, add_movie.getDirector());          // director
+            pstmt.setInt(5, add_movie.getRuntime());              // runtime
+            pstmt.setDouble(6, add_movie.getRating());            // rating
+            pstmt.setInt(7, add_movie.getNumberOfRate());         // numberOfRate
+            pstmt.executeUpdate();
+
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int movieId = generatedKeys.getInt(1); // movie_id
+                    // Insert genres
+                    try {
+                        String sqlGenre = "INSERT INTO movie_genre (movie_id, genre_id) VALUES (?, ?)";
+                        PreparedStatement pstmtGenre = connectionDB.prepareStatement(sqlGenre);
+                        for (String genre : add_movie.getGenres()) {
+                            pstmtGenre.setInt(1, movieId);
+                            pstmtGenre.setInt(2, add_genres.indexOf(genre) + 1);
+                            pstmtGenre.executeUpdate();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("Failed to retrieve movie_id.");
+                }
+            }
+        } catch (SQLException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 //    search feature

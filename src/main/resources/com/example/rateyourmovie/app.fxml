@@ -360,12 +360,6 @@
                                     <String fx:value="thumb" />
                                  </styleClass>
                               </ComboBox>
-                              <ComboBox fx:id="add_comboBoxRate" layoutX="448.0" layoutY="223.0" onAction="#add_comboBoxRateOnAction" prefHeight="40.0" prefWidth="104.0" promptText="Rate" stylesheets="@../../../css/selectbox.css">
-                                 <styleClass>
-                                    <String fx:value="choice-box" />
-                                    <String fx:value="list-cell" />
-                                 </styleClass>
-                              </ComboBox>
                               <TextField editable="false" layoutX="448.0" layoutY="507.0" prefHeight="25.0" prefWidth="82.0" />
                               <Label layoutX="332.0" layoutY="51.0" text="Movie:">
                                  <font>
@@ -472,6 +466,7 @@
                                     <Font name="Candara Italic" size="12.0" />
                                  </font>
                               </Label>
+                              <TextField fx:id="add_RateTextField" layoutX="447.0" layoutY="218.0" prefHeight="25.0" prefWidth="163.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="search_form" layoutX="355.0" layoutY="150.0" prefHeight="758.0" prefWidth="1288.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
