@@ -871,28 +871,61 @@ public class AppController implements Initializable {
     @FXML
     private ComboBox<Double> review_ComboBoxRate;
     @FXML
-    private Movie review_MyMoive;
+    private ReviewFilm My_review;
     @FXML
     private AnchorPane movie_detail;
     @FXML
     private ImageView review_movieImg1;
+    @FXML
+    private Label review_messegeLabel;
 
     private Movie movie_review_detail;
 
     private int review_genreOverLoad = 0;
 
     public void initReview(){
+        My_review = new ReviewFilm();
         review_ComboBoxRate.setItems(FXCollections.observableArrayList(0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0));
         review_hBox2.getChildren().clear();
         review_hBox1.getChildren().clear();
         movie_review_detail = new Movie();
         review_reviewBox.getChildren().clear();
+        review_MyReviewTextArea.clear();
     }
-    public void review_postButtonOnAction(){
-        review_MyMoive.setRating(review_ComboBoxRate.getSelectionModel().getSelectedItem());
-    }
-    public void review_ComboBoxRateOnAction(){
+    public void review_postButtonOnAction() {
+        if (review_ComboBoxRate.getSelectionModel().getSelectedItem() == null ||
+                review_MyReviewTextArea.getText().isEmpty()) {
+            review_messegeLabel.setText("Please fill all the fields");
+            return;
+        }
+        My_review.setReview(review_MyReviewTextArea.getText());
+        My_review.setReviewer(review_MyName.getText());
+        My_review.setRating(review_ComboBoxRate.getSelectionModel().getSelectedItem());
 
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectionDB = connectNow.getConnection();
+
+        String query = "INSERT INTO reviews (con_id, reviewer, rating, review) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement preparedStatement = connectionDB.prepareStatement(query)) {
+            preparedStatement.setInt(1, movie_review_detail.getId());
+            preparedStatement.setString(2, My_review.getReviewer());
+            preparedStatement.setDouble(3, My_review.getRating());
+            preparedStatement.setString(4, My_review.getReview());
+            preparedStatement.executeUpdate();
+
+            review_messegeLabel.setText("Review submitted successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            review_messegeLabel.setText("Failed to submit review.");
+        }
+        showMovieDetail(movie_review_detail);
+    }
+    public void review_ComboBoxRateOnAction() {
+        Double selectedRating = review_ComboBoxRate.getSelectionModel().getSelectedItem();
+        if (selectedRating == null) {
+            return;
+        }
+        My_review.setRating(selectedRating);
     }
 
     public void showMovieDetail(Movie movie) {
@@ -989,32 +1022,4 @@ public class AppController implements Initializable {
         }
         return lsReview;
     }
-
-    //
-
-    //
-//    private void addManully(){
-//        DatabaseConnection connectNow = new DatabaseConnection();
-//        Connection connectionDB = connectNow.getConnection();
-
-//        String sql = "INSERT INTO movie (movie_id, name, cover, director, genre, rating, year, numberOfRate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-//        try (PreparedStatement pstmt = connectionDB.prepareStatement(sql)) {
-//            pstmt.setInt(1, 1);
-//            pstmt.setString(2, "The Good, the Bad, and the Ugly2");              // name
-//            pstmt.setBlob(3, new FileInputStream("D:\\Intellij\\Projects\\MyFirstProjectEver\\RateYourMovie\\src\\main\\resources\\images\\co.png"));
-//            pstmt.setString(4, "Sergio Leone");      // director
-//            pstmt.setString(5, "Spaghetti Western");                    // genre
-//            pstmt.setDouble(6, 4.35 );                      // rating
-//            pstmt.setInt(7, 1966);                        // year
-//            pstmt.setInt(8, 8708);                     // numberOfRate
-//
-//            int rowsInserted = pstmt.executeUpdate();
-//            if (rowsInserted > 0) {
-//                System.out.println("A new movie was inserted successfully!");
-//            }
-//        } catch (SQLException | FileNotFoundException e) {
-//            System.out.println("error somewhere");
-//            e.printStackTrace();
-//        }
-//    }
 }

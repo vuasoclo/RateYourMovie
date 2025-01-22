@@ -677,6 +677,11 @@
                                                 <Font name="System Bold" size="13.0" />
                                              </font>
                                           </Button>
+                                          <Label fx:id="review_messegeLabel" layoutX="319.0" layoutY="372.0" style="-fx-text-fill: red;" textFill="RED">
+                                             <font>
+                                                <Font name="Arial" size="13.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </AnchorPane>
                                  </content>
