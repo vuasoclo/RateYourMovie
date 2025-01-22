@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.Movie;
+import model.ReviewFilm;
 
 import java.io.File;
 import java.net.URL;
@@ -114,6 +115,8 @@ public class AppController implements Initializable {
 //
 //    search
     @FXML
+    private Button hiddenButton;
+    @FXML
     private ComboBox<String> search_ComboBoxSelectTag;
 
     @FXML
@@ -151,6 +154,38 @@ public class AppController implements Initializable {
 
     @FXML
     private Label chart_messageLabel;
+//
+//     review
+
+    @FXML
+    private Label review_MyName;
+
+    @FXML
+    private TextArea review_MyReviewTextArea;
+
+    @FXML
+    private HBox review_hBox1;
+
+    @FXML
+    private HBox review_hBox2;
+
+    @FXML
+    private Label review_movieDirector;
+
+    @FXML
+    private Label review_movieName;
+
+    @FXML
+    private Label review_movieRating;
+
+    @FXML
+    private Label review_movieReleaseDate;
+
+    @FXML
+    private Label review_movieRuntime;
+
+    @FXML
+    private VBox review_reviewBox;
 //
     private double x = 0;
     private double y = 0;
@@ -193,7 +228,7 @@ public class AppController implements Initializable {
                 loader.setLocation(getClass().getResource("trending.fxml"));
                 AnchorPane trendingModel = loader.load();
                 TrendingController trendingController = loader.getController();
-                trendingController.setData(movie);
+                trendingController.setData(movie, this);
                 trendingBox.getChildren().add(trendingModel);
             }
         } catch (SQLException e) {
@@ -212,7 +247,7 @@ public class AppController implements Initializable {
                 loader.setLocation(getClass().getResource("reviewfeature.fxml"));
                 AnchorPane reviewFeatureModel = loader.load();
                 ReviewFeatureController reviewFeatureController = loader.getController();
-                reviewFeatureController.setData(movie);
+                reviewFeatureController.setData(movie, this);
                 reviewFeatureBox.getChildren().add(reviewFeatureModel);
             }
         } catch (SQLException e) {
@@ -232,7 +267,7 @@ public class AppController implements Initializable {
                 loader.setLocation(getClass().getResource("topmovie.fxml"));
                 AnchorPane topMovieModel = loader.load();
                 TopMovieController topMovieController = loader.getController();
-                topMovieController.setData(movie);
+                topMovieController.setData(movie, this);
                 topMovieBox.getChildren().add(topMovieModel);
             }
         } catch (SQLException e) {
@@ -252,7 +287,7 @@ public class AppController implements Initializable {
                 loader.setLocation(getClass().getResource("topresult.fxml"));
                 AnchorPane topResultModel = loader.load();
                 TopResultController topResultController = loader.getController();
-                topResultController.setData(movie);
+                topResultController.setData(movie, this);
                 topResultBox.getChildren().add(topResultModel);
             }
         } catch (SQLException e) {
@@ -271,7 +306,6 @@ public class AppController implements Initializable {
         Platform.exit();
     }
 
-    //switch page
     public void logoutButtonOnAction(){
         //generate code
         try {
@@ -382,6 +416,7 @@ public class AppController implements Initializable {
         return lsmovies;
     }
 
+    //switch page
     public void setAdd_buttonDefault() {
         add_button.setStyle("-fx-background-color: white");
         add_button.setStyle("-fx-text-fill: black");
@@ -400,18 +435,22 @@ public class AppController implements Initializable {
         bar_chartIcon.setImage(new Image(getClass().getResource("/icon/icons8-win-50.png").toExternalForm()));
     }
 
+
     public void swithcForm(ActionEvent event) {
         if (event.getSource() == home_button) {
             home_button.setStyle("-fx-background-color: #D97145; -fx-text-fill: white;");
-
             bar_homeIcon.setImage(new Image(getClass().getResource("/icon/icons8-home-50-white.png").toExternalForm()));
             setAdd_buttonDefault();
             setChart_buttonDefault();
+
 
             home_form.setVisible(true);
             add_form.setVisible(false);
             search_form.setVisible(false);
             chart_form.setVisible(false);
+            movie_detail.setVisible(false);
+            search_TextField.setText(null);
+
         }
         if (event.getSource() == add_button) {
             add_button.setStyle("-fx-background-color: #D97145; -fx-text-fill: white;");
@@ -419,10 +458,13 @@ public class AppController implements Initializable {
             setHome_buttonDefault();
             setChart_buttonDefault();
 
+
             add_form.setVisible(true);
             home_form.setVisible(false);
             search_form.setVisible(false);
             chart_form.setVisible(false);
+            movie_detail.setVisible(false);
+            search_TextField.setText(null);
 
 
         }
@@ -436,12 +478,16 @@ public class AppController implements Initializable {
             home_form.setVisible(false);
             add_form.setVisible(false);
             search_form.setVisible(false);
+            movie_detail.setVisible(false);
+            search_TextField.setText(null);
+
         }
-        if (!search_TextField.getText().isEmpty()) {
+        if (search_TextField != null && search_TextField.getText() != null && !search_TextField.getText().isEmpty()) {
             search_form.setVisible(true);
             home_form.setVisible(false);
             add_form.setVisible(false);
             chart_form.setVisible(false);
+            movie_detail.setVisible(false);
         }
     }
     //add movie
@@ -769,6 +815,131 @@ public class AppController implements Initializable {
         chart_includeBox.getChildren().clear();
         chart_excludeBox.getChildren().clear();
     }
+//    review movie main
+
+    @FXML
+    private ComboBox<Double> review_ComboBoxRate;
+    @FXML
+    private Movie review_MyMoive;
+    @FXML
+    private AnchorPane movie_detail;
+    @FXML
+    private ImageView review_movieImg1;
+
+    private Movie movie_review_detail;
+
+    private int review_genreOverLoad = 0;
+
+    public void initReview(){
+        review_ComboBoxRate.setItems(FXCollections.observableArrayList(0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0));
+        review_hBox2.getChildren().clear();
+        review_hBox1.getChildren().clear();
+        movie_review_detail = new Movie();
+        review_reviewBox.getChildren().clear();
+    }
+    public void review_postButtonOnAction(){
+        review_MyMoive.setRating(review_ComboBoxRate.getSelectionModel().getSelectedItem());
+    }
+    public void review_ComboBoxRateOnAction(){
+
+    }
+
+    public void showMovieDetail(Movie movie) {
+        initReview();
+        movie_review_detail = movie;
+
+        movie_detail.setVisible(true);
+        search_form.setVisible(false);
+        home_form.setVisible(false);
+        add_form.setVisible(false);
+        chart_form.setVisible(false);
+
+        review_movieName.setText(movie_review_detail.getName());
+        review_movieDirector.setText(movie_review_detail.getDirector());
+        review_movieRating.setText(String.valueOf(movie_review_detail.getRating()));
+        review_movieReleaseDate.setText(String.valueOf(movie_review_detail.getRelease_date()));
+        review_movieRuntime.setText(String.valueOf(movie_review_detail.getRuntime()));
+
+        try {
+            for (int genreId = 0; genreId < movie_review_detail.getGenres().size(); genreId++) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("genre.fxml"));
+                Label genreModel = loader.load();
+                GenreController genreController = loader.getController();
+                genreController.setData(movie_review_detail.getGenres().get(genreId));
+                if (genreId < 2) {
+                    review_hBox1.getChildren().add(genreModel);
+                } else if (genreId < 4) {
+                    review_hBox2.getChildren().add(genreModel);
+                } else {
+                    if (review_genreOverLoad == 1) {
+                        Label overloadLabel = (Label) review_hBox2.getChildren()
+                                .get(review_hBox2.getChildren().size() - 1);
+                        overloadLabel.setText("+" + (genreId - 3));
+                    } else {
+                        // add new overload component
+                        genreModel.setText("+" + (genreId - 3));
+                        review_genreOverLoad = 1;
+                        review_hBox2.getChildren().add(genreModel);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        review_movieImg1.setImage(movie_review_detail.getCover());
+
+        getSomeReview();
+    }
+
+    public void setUserName(String userName) {
+        review_MyName.setText(userName);
+    }
+
+    public void getSomeReview(){
+        List<ReviewFilm> lsReview = getReviewFromDB();
+        for(ReviewFilm reviewFilm : lsReview){
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("review.fxml"));
+                AnchorPane reviewModel = loader.load();
+                ReviewController reviewController = loader.getController();
+                reviewController.setData(reviewFilm.getReviewer(), String.valueOf(reviewFilm.getRating()), reviewFilm.getReview());
+                review_reviewBox.getChildren().add(reviewModel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<ReviewFilm> getReviewFromDB(){
+        List<ReviewFilm> lsReview = new ArrayList<>();
+
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectionDB = connectNow.getConnection();
+
+        String query = "SELECT reviewer, rating, review " +
+                "FROM reviews " +
+                "WHERE con_id = ?";
+
+        try (PreparedStatement preparedStatement = connectionDB.prepareStatement(query)) {
+            preparedStatement.setInt(1, movie_review_detail.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                ReviewFilm reviewFilm = new ReviewFilm();
+                reviewFilm.setReview(resultSet.getString("review"));
+                reviewFilm.setReviewer(resultSet.getString("reviewer"));
+                reviewFilm.setRating(resultSet.getDouble("rating"));
+                reviewFilm.setMovieName(movie_review_detail.getName());
+                lsReview.add(reviewFilm);
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lsReview;
+    }
+
+    //
 
     //
 //    private void addManully(){

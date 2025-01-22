@@ -16,7 +16,7 @@ public class HelloApplication extends Application {
     private double y = 0;
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("app.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
 
         Scene scene = new Scene(root);
         root.setOnMousePressed((MouseEvent event) ->{

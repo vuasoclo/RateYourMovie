@@ -33,7 +33,13 @@ public class TopMovieController {
     @FXML
     private Label rateingPoint;
 
-    public void setData(Movie movie){
+    private AppController appController;
+    private Movie movie_review_detail;
+
+    public void setData(Movie movie, AppController appController) {
+        movie_review_detail = movie;
+        this.appController = appController;
+
         movieImg.setImage(movie.getCover());
         movieName.setText(movie.getName());
         movieDirector.setText(movie.getDirector());
@@ -59,6 +65,7 @@ public class TopMovieController {
     }
     public void TopMovieButtonOnAction() {
         // switch page
+        appController.showMovieDetail(movie_review_detail);
     }
 
 }

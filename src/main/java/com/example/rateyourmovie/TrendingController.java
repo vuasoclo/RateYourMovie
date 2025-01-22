@@ -27,9 +27,14 @@ public class TrendingController {
     @FXML
     private AnchorPane trendingModel;
 
+    private AppController appController;
+    private Movie movie_review_detail;
+
     private final String [] colors = {"#FEBA54", "#B9E5FF", "#BDB2FE", "#FB9AA8"};
     //set data
-    public void setData(Movie movie){
+    public void setData(Movie movie, AppController appController) {
+        movie_review_detail = movie;
+        this.appController = appController;
         coverImage.setImage(movie.getCover());
         movieName.setText(movie.getName());
         movieDirector.setText(movie.getDirector());
@@ -45,6 +50,6 @@ public class TrendingController {
     }
 
     public void trendingButtonOnAction() {
-        // switch page
+        appController.showMovieDetail(movie_review_detail);
     }
 }

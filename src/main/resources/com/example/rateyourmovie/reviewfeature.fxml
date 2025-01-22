@@ -36,7 +36,7 @@
       </Label>
       <HBox alignment="CENTER" layoutX="314.0" layoutY="96.0" spacing="5.0">
          <children>
-            <ImageView fx:id="accImg" fitHeight="40.0" fitWidth="41.0">
+            <ImageView fitHeight="40.0" fitWidth="41.0">
                <image>
                   <Image url="@../../../icon/icons8-male-user-50.png" />
                </image>

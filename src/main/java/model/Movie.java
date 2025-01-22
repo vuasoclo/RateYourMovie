@@ -17,6 +17,9 @@ public class Movie {
     private Date release_date;
     private int numberOfRate;
     private int runtime;
+    public Movie() {
+        this.genres = new ArrayList<>();
+    }
 
     public Date getRelease_date() {
         return release_date;
@@ -32,10 +35,6 @@ public class Movie {
 
     public void setRuntime(int runtime) {
         this.runtime = runtime;
-    }
-
-    public Movie() {
-        this.genres = new ArrayList<>();
     }
 
     public int getId() {

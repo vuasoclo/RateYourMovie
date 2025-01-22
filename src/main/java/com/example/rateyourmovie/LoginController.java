@@ -72,10 +72,16 @@ public class LoginController{
 
             while(qResult.next()){
                 if(qResult.getInt(1) == 1){
+                    String userName = enterUsernameField.getText();
                     messegeLabel.setText(null);
                     loginButton.getScene().getWindow().hide(); // hide your login form
 
-                    Parent root = FXMLLoader.load(getClass().getResource("app.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("app.fxml"));
+                    Parent root = loader.load();
+
+                    AppController appController = loader.getController();
+                    appController.setUserName(userName);
+
                     Stage appStage = new Stage();
                     Scene scene = new Scene(root);
 
@@ -94,6 +100,8 @@ public class LoginController{
 
                     appStage.setScene(scene);
                     appStage.show();
+                    appController.setUserName(enterUsernameField.getText());
+
 
                 } else {
                     messegeLabel.setText("Invalid Login, Please Try Again");

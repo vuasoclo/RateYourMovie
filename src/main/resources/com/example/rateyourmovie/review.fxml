@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="reviewModel" style="-fx-background-color: #ffe4b4;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.rateyourmovie.ReviewController">
+   <children>
+      <HBox alignment="CENTER" layoutX="24.0" layoutY="31.0" spacing="5.0">
+         <children>
+            <ImageView fitHeight="40.0" fitWidth="41.0">
+               <image>
+                  <Image url="@../../../icon/icons8-male-user-50.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="e11" text="Review by" />
+            <Label fx:id="OtherName" text="Label" textFill="#ee7912">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="37.0" layoutY="78.0">
+         <children>
+            <Label fx:id="OtherRating" text="4.25/5" />
+            <ImageView fitHeight="26.0" fitWidth="26.0">
+               <image>
+                  <Image url="@../../../icon/icons8-star-48.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <Label fx:id="OtherReview" alignment="TOP_LEFT" layoutX="27.0" layoutY="110.0" prefWidth="784.0" text="It's a easy trap to fall in to – especially where so many written reviews are concerned – but care should be taken when throwing superlatives around. Otherwise every half decent album will attract descriptions like &quot;the best&quot;, &quot;the greatest&quot; or &quot;the definitive&quot; and opinion will, therefore, be rendered useless. In the case of Reading, Writing And Arithmetic by The Sundays the trap is almost impossible to avoid. Not, however, due to the overall quality of the music, but more because of the amazing vocal performance of Harriet Wheeler. She has been labelled angelic, ethereal and celestial and she certainly is all that. She has a litheness in her voice like liquid honey which enhances a musical style that's a mixture of The Smiths and the Cocteau Twins – a very eclectic brew which could have been disastrous but is saved by the wonderful Wheeler and the sturdy, melodic guitar-work of David Gavurin.The highlight of the whole album is the scintillating &quot;Here's Where The Story Ends&quot;. You’d be hard pressed to find a more breathtaking slice of pop. The guitar, bass and drums just trundle in the background while this voice performs mind-boggling loops and rolls. It's the musical equivalent of watching circus acrobats. And, even more amazing, it's certainly not lonely when it comes to quality.Anyone, and I mean anyone, who can sing the line, &quot;Where's the harm in voicing a doubt? You'll find me in the lavatory&quot; and make it sound so angelic deserves all the accolades around. That's from &quot;You're Not The Only One I Know&quot; and equally dazzling are &quot;Can't Be Sure&quot;, &quot;I Kicked A Boy&quot; and &quot;Joy&quot;.I may have given the impression that David Gavurin, Paul Brindley and Patrick Hannan are all incidental when compared to Wheeler's voice but that isn't the case. The music may appear simple but it's deceptively so. It provides pace and ambience and is the perfect framework for Wheeler, I especially like the way the music actually feels like it's tripping over itself on &quot;Hideous Towns&quot;.Sadly, The Sundays would never reach the heights of Reading, Writing And Arithmetic again but if you only release one album of this quality you can be rightly proud of yourself." wrapText="true">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+   </children>
+   <padding>
+      <Insets bottom="14.0" />
+   </padding>
+</AnchorPane>

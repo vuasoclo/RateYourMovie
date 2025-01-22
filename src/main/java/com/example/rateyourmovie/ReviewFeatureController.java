@@ -10,11 +10,7 @@ import model.Movie;
 import java.text.SimpleDateFormat;
 
 public class ReviewFeatureController {
-
-    @FXML
-    private ImageView accImg;
-
-    @FXML
+    @FXML   
     private Label accName;
 
     @FXML
@@ -50,8 +46,12 @@ public class ReviewFeatureController {
     private Label e1, e2;
 
     private int genreOverLoad = 0;
+    private AppController appController;
+    private Movie movie_review_detail;
 
-    public void setData(Movie movie){
+    public void setData(Movie movie, AppController appController) {
+        movie_review_detail = movie;
+        this.appController = appController;
         movieImg.setImage(movie.getCover());
         movieName.setText(movie.getName());
         movieDirector.setText(movie.getDirector());
@@ -63,45 +63,38 @@ public class ReviewFeatureController {
         fromNumverOfRating.setText(String.format("from %d ratings", movie.getNumberOfRate()));
         ratingPoint.setText(String.format("%.2f", movie.getRating()));
         //handle genre
-        try{
-
-            for(int genreId = 0; genreId < movie.getGenres().size(); genreId++){
+        try {
+            for (int genreId = 0; genreId < movie.getGenres().size(); genreId++) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("genre.fxml"));
                 Label genreModel = loader.load();
                 GenreController genreController = loader.getController();
                 genreController.setData(movie.getGenres().get(genreId));
-                if(genreId < 2){
+                if (genreId < 2) {
                     hBox1.getChildren().add(genreModel);
-                }
-                else if (genreId < 4){
+                } else if (genreId < 4) {
                     hBox2.getChildren().add(genreModel);
-                }
-                else{
-                    if(genreOverLoad == 1){
+                } else {
+                    if (genreOverLoad == 1) {
                         Label overloadLabel = (Label) hBox2.getChildren()
                                 .get(hBox2.getChildren().size() - 1);
                         overloadLabel.setText("+" + (genreId - 3));
-                    }
-                    else{
+                    } else {
                         // add new overload component
                         genreModel.setText("+" + (genreId - 3));
                         genreOverLoad = 1;
                         hBox2.getChildren().add(genreModel);
                     }
                 }
-
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-//        movieGenre.setText(genres.toString());
 
         movieName.setStyle("-fx-text-fill: #bf671e");
         movieDirector.setStyle("-fx-text-fill: #fe9731");
         movieYear.setStyle("-fx-text-fill: black");
         fromNumverOfRating.setStyle("-fx-text-fill: black");
         ratingPoint.setStyle("-fx-text-fill: black");
-//        movieGenre.setStyle("-fx-text-fill: black");
         accName.setStyle("-fx-text-fill: #ee7912");
         accRating5.setStyle("-fx-text-fill: black");
         accReview.setStyle("-fx-text-fill: black");
@@ -109,7 +102,8 @@ public class ReviewFeatureController {
         e2.setStyle("-fx-text-fill: black");
     }
 
-    public void movieOnActionButton(){
-
+    public void movieOnActionButton() {
+        //switch to movie detail
+        appController.showMovieDetail(movie_review_detail);
     }
 }
