@@ -64,7 +64,8 @@ public class ManagerMovie {
 
     public List<ReviewFilm> featureReviewMoivie(){
         return this.reviewFilms.stream()
-            .filter(reviewFilm -> reviewFilm.getReview().length() >= 1500)
+            .filter(reviewFilm -> reviewFilm.getReview().length() >= 1000)
+            .sorted((m1, m2) -> Double.compare(Math.random(), Math.random())) // random sorting
             .limit(10)
             .collect(Collectors.toList());
     }
