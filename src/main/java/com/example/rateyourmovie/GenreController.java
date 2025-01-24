@@ -18,6 +18,9 @@ public class GenreController {
     private final String[] colors = {"#FEBA54", "#B9E5FF", "#BDB2FE", "#FB9AA8", "#FE686A", "#92DC75"};
 
     public void setData(String genre) {
+        if (genre == null) {
+            return;
+        }
         genreLabel.setText(genre);
         int length = genre.length();
         genreLabel.setStyle("-fx-background-color: " + getColorBasedOnLength(length));

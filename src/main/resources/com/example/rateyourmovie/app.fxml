@@ -161,7 +161,7 @@
                                     <String fx:value="track" />
                                  </styleClass>
                                  <content>
-                                    <VBox fx:id="reviewFeatureBox" prefHeight="1500.0" prefWidth="724.0" spacing="17.0">
+                                    <VBox fx:id="reviewFeatureBox" prefWidth="724.0" spacing="17.0">
                                        <padding>
                                           <Insets top="10.0" />
                                        </padding></VBox>
@@ -175,7 +175,7 @@
                                     <String fx:value="track" />
                                  </styleClass>
                                  <content>
-                                    <VBox fx:id="trendingBox" prefHeight="1955.0" prefWidth="306.0" spacing="14.0">
+                                    <VBox fx:id="trendingBox" prefWidth="306.0" spacing="14.0">
                                        <padding>
                                           <Insets left="10.0" top="10.0" />
                                        </padding></VBox>
@@ -197,7 +197,7 @@
                            <children>
                               <ScrollPane fitToWidth="true" layoutX="14.0" layoutY="118.0" prefHeight="632.0" prefWidth="959.0" stylesheets="@../../../css/scrollbar.css">
                                  <content>
-                                    <VBox fx:id="topMovieBox" prefHeight="1060.0" prefWidth="944.0" spacing="14.0">
+                                    <VBox fx:id="topMovieBox" prefWidth="944.0" spacing="14.0">
                                        <padding>
                                           <Insets left="10.0" top="5.0" />
                                        </padding></VBox>
@@ -313,7 +313,7 @@
                                     </Button>
                                     <ScrollPane fitToWidth="true" layoutX="23.0" layoutY="104.0" prefHeight="118.0" prefWidth="201.0" stylesheets="@../../../css/scrollbar.css">
                                        <content>
-                                          <VBox fx:id="chart_includeBox" prefHeight="298.0" prefWidth="182.0" spacing="5.0" />
+                                          <VBox fx:id="chart_includeBox" prefWidth="182.0" spacing="5.0" />
                                        </content>
                                        <styleClass>
                                           <String fx:value="scroll-bar" />
@@ -323,7 +323,7 @@
                                     </ScrollPane>
                                     <ScrollPane fitToWidth="true" layoutX="27.0" layoutY="311.0" prefHeight="118.0" prefWidth="201.0" stylesheets="@../../../css/scrollbar.css">
                                        <content>
-                                          <VBox fx:id="chart_excludeBox" prefHeight="298.0" prefWidth="182.0" spacing="5.0" />
+                                          <VBox fx:id="chart_excludeBox" prefWidth="182.0" spacing="5.0" />
                                        </content>
                                        <styleClass>
                                           <String fx:value="scroll-bar" />
@@ -569,7 +569,7 @@
                                     <String fx:value="track" />
                                  </styleClass>
                                  <content>
-                                    <VBox fx:id="topResultBox" prefHeight="1025.0" prefWidth="752.0" spacing="15.0">
+                                    <VBox fx:id="topResultBox" prefWidth="752.0" spacing="15.0">
                                        <padding>
                                           <Insets top="10.0" />
                                        </padding></VBox>
@@ -640,16 +640,26 @@
                                                 <Image url="@../../../icon/icons8-male-user-50.png" />
                                              </image>
                                           </ImageView>
-                                          <Label fx:id="review_MyName" layoutX="66.0" layoutY="330.0" style="-fx-text-fill: ee7912;" text="Label" textFill="#ee7912">
-                                             <font>
-                                                <Font size="17.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="e6" layoutX="132.0" layoutY="332.0" style="-fx-text-fill: black;" text="Rate:">
-                                             <font>
-                                                <Font name="Candara Bold" size="18.0" />
-                                             </font>
-                                          </Label>
+                                          <HBox alignment="CENTER" layoutX="66.0" layoutY="319.0" spacing="9.0">
+                                             <children>
+                                                <Label fx:id="review_MyName" style="-fx-text-fill: ee7912;" text="Label" textFill="#ee7912">
+                                                   <font>
+                                                      <Font size="17.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="e6" style="-fx-text-fill: black;" text="Rate:">
+                                                   <font>
+                                                      <Font name="Candara Bold" size="18.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="review_ComboBoxRate" onAction="#review_ComboBoxRateOnAction" prefHeight="40.0" prefWidth="105.0" promptText="Rate" stylesheets="@../../../css/selectbox.css">
+                                                   <styleClass>
+                                                      <String fx:value="choice-box" />
+                                                      <String fx:value="list-cell" />
+                                                   </styleClass>
+                                                </ComboBox>
+                                             </children>
+                                          </HBox>
                                           <Line endX="750.0" layoutX="121.0" layoutY="678.0" startX="-100.0" />
                                           <TextArea fx:id="review_MyReviewTextArea" layoutX="20.0" layoutY="398.0" prefWidth="681.0" style="-fx-background-color: #ffe4b4;" wrapText="true" />
                                           <Label fx:id="e7" layoutX="31.0" layoutY="371.0" style="-fx-text-fill: black;" text="Review">
@@ -666,12 +676,6 @@
                                              <padding>
                                                 <Insets top="5.0" />
                                              </padding></VBox>
-                                          <ComboBox fx:id="review_ComboBoxRate" layoutX="190.0" layoutY="323.0" onAction="#review_ComboBoxRateOnAction" prefHeight="40.0" prefWidth="105.0" promptText="Rate" stylesheets="@../../../css/selectbox.css">
-                                             <styleClass>
-                                                <String fx:value="choice-box" />
-                                                <String fx:value="list-cell" />
-                                             </styleClass>
-                                          </ComboBox>
                                           <Button layoutX="656.0" layoutY="340.0" mnemonicParsing="false" onAction="#review_postButtonOnAction" style="-fx-background-color: FE9731;" text="Post" textFill="WHITE">
                                              <font>
                                                 <Font name="System Bold" size="13.0" />

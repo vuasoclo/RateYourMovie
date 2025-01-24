@@ -22,6 +22,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import model.Movie;
 import model.ReviewFilm;
 
@@ -33,6 +34,7 @@ import java.net.URL;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AppController implements Initializable {
     @FXML
@@ -199,29 +201,40 @@ public class AppController implements Initializable {
     private int search_excludeOverload;
     private List<String> chart_IncludeGenres = new ArrayList<>();
     private List<String> chart_ExcludeGenres = new ArrayList<>();
-
+    private List<Movie> listMovieOneTime = new ArrayList<>();
+    private List<ReviewFilm> lstReviewFilmOneTime = new ArrayList<>();
+    private ManagerMovie managerMovie;
 
     private List<Movie> trendingMovies;
-    private List<Movie> reviewFeatureMovies; // change to child of movie and acc TO-DO or combine list so dont need to change
     private List<Movie> topMovies;
     private List<Movie> topResult;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        getScrollPaneTrendingMovie();
-        getScrollPaneReviewFeatureMovie();
-        getScrollPaneTopMovie();
-        getScrollPaneTopResult();
+        try {
+            listMovieOneTime = getMovieFromDB();
+            lstReviewFilmOneTime = getAllReviewFromDB();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        managerMovie = new ManagerMovie();
+        managerMovie.addMovieList(listMovieOneTime);
+        managerMovie.addReviewFilmList(lstReviewFilmOneTime);
+        manageReviewFeature(); // TO-DO reset when you add [show detail instead of expend review]
+        manageTrending();
+        manageTopMovie();
         add_initComboBoxSelectTag();
         init3SearchComboBox();
         chart_init();
     }
 
-    public void getScrollPaneTrendingMovie(){
+    public void getScrollPaneTrendingMovie(List<Movie> MyList){
+        if(trendingBox.getChildren().size() > 0){
+            trendingBox.getChildren().clear();
+        }
         trendingMovies = new ArrayList<>();
         try {
-            trendingMovies.addAll(getMovieFromDB());
+            trendingMovies.addAll(MyList);
             for (Movie movie : trendingMovies) {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("trending.fxml"));
@@ -230,67 +243,70 @@ public class AppController implements Initializable {
                 trendingController.setData(movie, this);
                 trendingBox.getChildren().add(trendingModel);
             }
-        } catch (SQLException e) {
-
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void getScrollPaneReviewFeatureMovie(){
-        reviewFeatureMovies = new ArrayList<>();
+    public void getScrollPaneReviewFeatureMovie(List<Pair<ReviewFilm, Movie>> MyList) {
+        if (reviewFeatureBox.getChildren().size() > 0) {
+            reviewFeatureBox.getChildren().clear();
+        }
         try {
-            reviewFeatureMovies.addAll(getMovieFromDB());
-            for (Movie movie : reviewFeatureMovies) {
+            for (Pair<ReviewFilm, Movie> pair : MyList) {
+                Movie movie = pair.getValue();
+                ReviewFilm reviewFilm = pair.getKey();
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("reviewfeature.fxml"));
                 AnchorPane reviewFeatureModel = loader.load();
                 ReviewFeatureController reviewFeatureController = loader.getController();
-                reviewFeatureController.setData(movie, this);
+                reviewFeatureController.setData(movie, reviewFilm, this);
                 reviewFeatureBox.getChildren().add(reviewFeatureModel);
             }
-        } catch (SQLException e) {
-
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getScrollPaneTopMovie(){
+    public void getScrollPaneTopMovie(List<Movie> MyList){
+        if(topMovieBox.getChildren().size() > 0){
+            topMovieBox.getChildren().clear();
+        }
         topMovies = new ArrayList<>();
         try {
-            topMovies.addAll(getMovieFromDB());
+            topMovies.addAll(MyList);
+            int idx = 0;
             for (Movie movie : topMovies) {
+                idx++;
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("topmovie.fxml"));
                 AnchorPane topMovieModel = loader.load();
                 TopMovieController topMovieController = loader.getController();
-                topMovieController.setData(movie, this);
+                topMovieController.setData(movie, idx,this);
                 topMovieBox.getChildren().add(topMovieModel);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getScrollPaneTopResult(){
+    public void getScrollPaneTopResult(List<Movie> MyList){
+        if(topResultBox.getChildren().size() > 0){
+            topResultBox.getChildren().clear();
+        }
         //generate top result as above but change name
         topResult = new ArrayList<>();
         try {
-            topResult.addAll(getMovieFromDB());
+            topResult.addAll(MyList);
+            int idx = 0;
             for (Movie movie : topResult) {
+                idx ++;
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("topresult.fxml"));
                 AnchorPane topResultModel = loader.load();
                 TopResultController topResultController = loader.getController();
-                topResultController.setData(movie, this);
+                topResultController.setData(movie, idx, this);
                 topResultBox.getChildren().add(topResultModel);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -395,7 +411,6 @@ public class AppController implements Initializable {
         WHERE mg.movie_id = ?;
     """;
         // Fetch genres for each movie
-        Set<String> tmp_add_genres = new HashSet<>();
         try (PreparedStatement preparedStatementGenre = connectionDB.prepareStatement(sqlGenre)) {
             for (Movie movie : lsmovies) {
                 preparedStatementGenre.setInt(1, movie.getId());
@@ -403,16 +418,54 @@ public class AppController implements Initializable {
                     while (resultSet.next()) {
                         String genretmp = resultSet.getString("name");
                         movie.getGenres().add(genretmp);
-                        tmp_add_genres.add(genretmp);
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        add_genres.addAll(tmp_add_genres);
+
+        // Fetch genres
+        String sql = "SELECT name FROM genre";
+        try (PreparedStatement preparedStatement = connectionDB.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                add_genres.add(resultSet.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         return lsmovies;
+    }
+
+    public List<ReviewFilm> getAllReviewFromDB() {
+        List<ReviewFilm> lstReviewFilm = new ArrayList<>();
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectionDB = connectNow.getConnection();
+
+        String query = """
+        SELECT r.reviewer, r.review, r.rating, r.con_id, m.name 
+        FROM reviews r
+        JOIN movie m ON r.con_id = m.movie_id
+    """;
+
+        try (PreparedStatement preparedStatement = connectionDB.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                // Tạo đối tượng ReviewFilm và set thông tin
+                ReviewFilm reviewFilm = new ReviewFilm();
+                reviewFilm.setReviewer(resultSet.getString("reviewer"));
+                reviewFilm.setReview(resultSet.getString("review"));
+                reviewFilm.setRating(resultSet.getDouble("rating"));
+                reviewFilm.setMovieName(resultSet.getString("name"));
+                lstReviewFilm.add(reviewFilm);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lstReviewFilm;
     }
 
     //switch page
@@ -481,7 +534,8 @@ public class AppController implements Initializable {
             search_TextField.setText(null);
 
         }
-        if (search_TextField != null && search_TextField.getText() != null && !search_TextField.getText().isEmpty()) {
+        if (search_TextField != null && search_TextField.getText() != null) {
+            manageTopResult_apply();
             search_form.setVisible(true);
             home_form.setVisible(false);
             add_form.setVisible(false);
@@ -538,6 +592,19 @@ public class AppController implements Initializable {
         else{
             add_messageLabel1.setText("added on select tag");
             add_comboBoxSelectTag.getItems().add(add_newGenreTextField.getText());
+
+            DatabaseConnection connectNow = new DatabaseConnection();
+            Connection connectionDB = connectNow.getConnection();
+
+            String sql = "INSERT INTO genre (name) VALUES (?)";
+            try (PreparedStatement preparedStatement = connectionDB.prepareStatement(sql)) {
+                preparedStatement.setString(1, add_newGenreTextField.getText());
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            add_genres.add(add_newGenreTextField.getText());
+            add_newGenreTextField.clear();
         }
     }
 
@@ -630,10 +697,6 @@ public class AppController implements Initializable {
         DatabaseConnection connectNow = new DatabaseConnection();
         Connection connectionDB = connectNow.getConnection();
 
-        if (connectionDB == null) {
-            System.out.println("Database connection failed!");
-            return;
-        }
         File file = new File(add_ImagePath);
         if (!file.exists()) {
             System.out.println("Image file not found: " + add_ImagePath);
@@ -679,12 +742,25 @@ public class AppController implements Initializable {
 
 
     public void search_ApplyButtonOnAction(){
+        if(search_FromButton.getText().equals("From")) {
+            search_FromButton.setText("1960");
+        }
+        if(search_ToButton.getText().equals("To")){
+            search_ToButton.setText("2025");
+        }
         if(Integer.valueOf(search_FromButton.getText()) > Integer.valueOf(search_ToButton.getText())){
             search_messegeLabel.setText("From year must be smaller than To year");
             return;
         }
+        else{
+            manageTopResult_apply();
+        }
     }
     public void search_ResetButtonOnAction(){
+        search_ComboBoxSelectTag.getItems().clear();
+        search_ComboBoxSelectTag.setItems(FXCollections.observableArrayList(add_genres));
+        search_ComboBoxSelectTag2.getItems().clear();
+        search_ComboBoxSelectTag2.setItems(FXCollections.observableArrayList(add_genres));
         search_IncludeGenres.clear();
         search_ExcludeGenres.clear();
         search_includeTagBox.getChildren().clear();
@@ -730,6 +806,9 @@ public class AppController implements Initializable {
             loader.setLocation(getClass().getResource("genre.fxml"));
             Label genreModel = loader.load();
             GenreController genreController = loader.getController();
+            if (selectedItem == null || selectedItem.isEmpty()) {
+                return;
+            }
             genreController.setData(selectedItem);
 
             if (search_IncludeGenres.size() > 3) {
@@ -772,6 +851,9 @@ public class AppController implements Initializable {
             loader.setLocation(getClass().getResource("genre.fxml"));
             Label genreModel = loader.load();
             GenreController genreController = loader.getController();
+            if (selectedItem == null || selectedItem.isEmpty()) {
+                return;
+            }
             genreController.setData(selectedItem);
 
             if (search_ExcludeGenres.size() > 3) {
@@ -826,6 +908,9 @@ public class AppController implements Initializable {
             loader.setLocation(getClass().getResource("genre.fxml"));
             Label genreModel = loader.load();
             GenreController genreController = loader.getController();
+            if (selectedItem == null || selectedItem.isEmpty()) {
+                return;
+            }
             genreController.setData(selectedItem);
             chart_includeBox.getChildren().add(genreModel);
         } catch (Exception e) {
@@ -848,6 +933,9 @@ public class AppController implements Initializable {
             loader.setLocation(getClass().getResource("genre.fxml"));
             Label genreModel = loader.load();
             GenreController genreController = loader.getController();
+            if (selectedItem == null || selectedItem.isEmpty()) {
+                return;
+            }
             genreController.setData(selectedItem);
             chart_excludeBox.getChildren().add(genreModel);
         } catch (Exception e) {
@@ -857,10 +945,14 @@ public class AppController implements Initializable {
     }
 
     public void chart_ApplyButtonOnAction() {
-
+        manageTopMovie();
     }
 
     public void chart_ResetButtonOnAction() {
+        chart_ComboBoxSelectTag.getItems().clear();
+        chart_ComboBoxSelectTag.setItems(FXCollections.observableArrayList(add_genres));
+        chart_ComboBoxSelectTag2.getItems().clear();
+        chart_ComboBoxSelectTag2.setItems(FXCollections.observableArrayList(add_genres));
         chart_IncludeGenres.clear();
         chart_ExcludeGenres.clear();
         chart_includeBox.getChildren().clear();
@@ -1022,4 +1114,51 @@ public class AppController implements Initializable {
         }
         return lsReview;
     }
+
+//    filter Data
+    public void manageReviewFeature(){
+        //map movieName in listMovieOneTime to movie object
+        Map<String, Movie> movieMap = listMovieOneTime.stream()
+                .collect(Collectors.toMap(Movie::getName, movie -> movie));
+
+        List<Pair<ReviewFilm, Movie>> frm = new ArrayList<>();
+        for (ReviewFilm reviewFilm : managerMovie.featureReviewMoivie()) {
+            String movieName = reviewFilm.getMovieName();
+            Movie movie = movieMap.get(movieName);
+            frm.add(new Pair<>(reviewFilm, movie));
+        }
+        getScrollPaneReviewFeatureMovie(frm);
+    }
+
+    public void manageTrending(){
+        getScrollPaneTrendingMovie(managerMovie.trendingMovie()); // this is temporary list
+    }
+
+    public void manageTopMovie(){
+        List<Movie> tmplst = managerMovie.chartMovie();
+        tmplst = managerMovie.searchMovieByGenre(tmplst, chart_IncludeGenres, chart_ExcludeGenres);
+        getScrollPaneTopMovie(tmplst);
+    }
+
+    public void manageTopResult_apply(){
+        List<Movie> tmplst = managerMovie.searchMovieByName(search_TextField.getText());
+        tmplst = managerMovie.searchMovieByGenre(tmplst, search_IncludeGenres, search_ExcludeGenres);
+        int to, from;
+        if(search_FromButton.getText().equals("From")) {
+            from = 1960;
+        }
+        else{
+            from = Integer.parseInt(search_FromButton.getText());
+        }
+        if(search_ToButton.getText().equals("To")){
+            to = 2025;
+        }
+        else{
+            to = Integer.parseInt(search_ToButton.getText());
+        }
+        tmplst = managerMovie.rangeMovieByYear(tmplst, from, to);
+        getScrollPaneTopResult(tmplst);
+    }
+//
 }
+

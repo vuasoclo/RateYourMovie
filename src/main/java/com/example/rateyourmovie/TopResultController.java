@@ -39,7 +39,7 @@ public class TopResultController {
     private AppController appController;
     private Movie movie_review_detail;
 
-    public void setData(Movie movie, AppController appController) {
+    public void setData(Movie movie, int idx,AppController appController) {
         movie_review_detail = movie;
         this.appController = appController;
 
@@ -52,9 +52,7 @@ public class TopResultController {
         movieYear.setText(year);
 
         numberRate.setText(String.format("/%.1fk", (double) movie.getNumberOfRate() / 1000));
-        // add review on table sql TO-DO
-//        // TO-DO add movieTopId to movie it is not id movie
-        movieTopId.setText(String.valueOf(movie.getId())); // TO-DO
+        movieTopId.setText(String.valueOf(idx));
 
         rateingPoint.setText(String.format("%.2f", movie.getRating()));
         movieName.setStyle("-fx-text-fill: #bf671e");

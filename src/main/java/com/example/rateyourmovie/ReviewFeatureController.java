@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import model.Movie;
+import model.ReviewFilm;
 
 import java.text.SimpleDateFormat;
 
@@ -49,7 +50,7 @@ public class ReviewFeatureController {
     private AppController appController;
     private Movie movie_review_detail;
 
-    public void setData(Movie movie, AppController appController) {
+    public void setData(Movie movie, ReviewFilm reviewFilm, AppController appController) {
         movie_review_detail = movie;
         this.appController = appController;
         movieImg.setImage(movie.getCover());
@@ -89,6 +90,10 @@ public class ReviewFeatureController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        accName.setText(reviewFilm.getReviewer());
+        accRating5.setText(String.format("%.1f", reviewFilm.getRating()));
+        accReview.setText(reviewFilm.getReview());
 
         movieName.setStyle("-fx-text-fill: #bf671e");
         movieDirector.setStyle("-fx-text-fill: #fe9731");
