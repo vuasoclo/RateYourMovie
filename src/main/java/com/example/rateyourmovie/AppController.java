@@ -114,6 +114,8 @@ public class AppController implements Initializable {
 
     @FXML
     private TextArea descriptionTextField;
+    @FXML
+    private TextField add_RateTextField;
 //
 //    search
     @FXML
@@ -188,6 +190,18 @@ public class AppController implements Initializable {
 
     @FXML
     private VBox review_reviewBox;
+
+    @FXML
+    private ComboBox<Double> review_ComboBoxRate;
+    @FXML
+    private ReviewFilm My_review;
+    @FXML
+    private AnchorPane movie_detail;
+    @FXML
+    private ImageView review_movieImg1;
+    @FXML
+    private Label review_messegeLabel;
+
 //
     private double x = 0;
     private double y = 0;
@@ -204,6 +218,8 @@ public class AppController implements Initializable {
     private List<Movie> listMovieOneTime = new ArrayList<>();
     private List<ReviewFilm> lstReviewFilmOneTime = new ArrayList<>();
     private ManagerMovie managerMovie;
+    private Movie movie_review_detail;
+    private int review_genreOverLoad = 0;
 
     private List<Movie> trendingMovies;
     private List<Movie> topMovies;
@@ -544,8 +560,6 @@ public class AppController implements Initializable {
         }
     }
     //add movie
-    @FXML
-    private TextField add_RateTextField;
 
     public void add_importButtonOnAction() {
         FileChooser open = new FileChooser();
@@ -959,21 +973,6 @@ public class AppController implements Initializable {
         chart_excludeBox.getChildren().clear();
     }
 //    review movie main
-
-    @FXML
-    private ComboBox<Double> review_ComboBoxRate;
-    @FXML
-    private ReviewFilm My_review;
-    @FXML
-    private AnchorPane movie_detail;
-    @FXML
-    private ImageView review_movieImg1;
-    @FXML
-    private Label review_messegeLabel;
-
-    private Movie movie_review_detail;
-
-    private int review_genreOverLoad = 0;
 
     public void initReview(){
         My_review = new ReviewFilm();
