@@ -1134,14 +1134,15 @@ public class AppController implements Initializable {
     }
 
     public void manageTopMovie(){
-        List<Movie> tmplst = managerMovie.chartMovie();
-        tmplst = managerMovie.searchMovieByGenre(tmplst, chart_IncludeGenres, chart_ExcludeGenres);
+        List<Movie> tmplst = new ArrayList<Movie>();
+        tmplst = managerMovie.searchMovieByGenre(chart_IncludeGenres, chart_ExcludeGenres);
+        tmplst = managerMovie.chartMovie(tmplst);
         getScrollPaneTopMovie(tmplst);
     }
 
     public void manageTopResult_apply(){
-        List<Movie> tmplst = managerMovie.searchMovieByName(search_TextField.getText());
-        tmplst = managerMovie.searchMovieByGenre(tmplst, search_IncludeGenres, search_ExcludeGenres);
+        List<Movie> tmplst = managerMovie.searchMovieByGenre(search_IncludeGenres, search_ExcludeGenres);
+        tmplst = managerMovie.searchMovieByName(tmplst, search_TextField.getText());
         int to, from;
         if(search_FromButton.getText().equals("From")) {
             from = 1960;

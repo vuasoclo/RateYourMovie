@@ -24,14 +24,14 @@ public class ManagerMovie {
         this.reviewFilms.addAll(reviewFilms);
     }
 
-    public List<Movie> searchMovieByName(String name){
-        return this.movies.stream()
+    public List<Movie> searchMovieByName(List<Movie> preList, String name){
+        return preList.stream()
                 .filter(movie -> movie.getName().toLowerCase().contains(name.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
-    public List<Movie> searchMovieByGenre(List<Movie> preList, List<String> includeGenre, List<String> excludeGenre) {
-        return preList.stream()
+    public List<Movie> searchMovieByGenre(List<String> includeGenre, List<String> excludeGenre) {
+        return this.movies.stream()
                 .filter(movie -> includeGenre.isEmpty() || movie.getGenres().containsAll(includeGenre)) // Include movies with all genre in includeGenre
                 .filter(movie -> excludeGenre.isEmpty() || excludeGenre.stream().noneMatch(movie.getGenres()::contains)) // Exclude movies with any genre in excludeGenre
                 .collect(Collectors.toList());
@@ -54,8 +54,8 @@ public class ManagerMovie {
                 .collect(Collectors.toList());
     }
 
-    public List<Movie> chartMovie(){
-        return this.movies.stream()
+    public List<Movie> chartMovie(List<Movie> preList){
+        return preList.stream()
                 .sorted((m1, m2) -> Double.compare((m2.getNumberOfRate()/1000) / m2.getRating(),
                         (m1.getNumberOfRate()/1000) / m1.getRating()))
                 .limit(10)
