@@ -36,19 +36,19 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutX="693.0" layoutY="47.0" prefHeight="31.0" prefWidth="124.0" spacing="3.0">
+      <HBox alignment="CENTER" layoutX="680.0" layoutY="49.0" spacing="3.0">
          <children>
             <ImageView fitHeight="24.0" fitWidth="24.0">
                <image>
                   <Image url="@../../../icon/icons8-star-50.png" />
                </image>
             </ImageView>
-            <Label fx:id="rateingPoint" text="3.14" wrapText="true">
+            <Label fx:id="rateingPoint" text="3.544" wrapText="true">
                <font>
                   <Font name="Cambria Bold" size="23.0" />
                </font>
             </Label>
-            <Label fx:id="numberRate" text="/4k" wrapText="true">
+            <Label fx:id="numberRate" text="/4444k" wrapText="true">
                <font>
                   <Font size="17.0" />
                </font>

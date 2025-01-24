@@ -13,7 +13,7 @@
    <children>
       <ImageView fx:id="coverImage" fitHeight="323.0" fitWidth="209.0" layoutX="28.0" layoutY="14.0">
          <image>
-            <Image url="@../../../images/sh.png" />
+            <Image url="@../../../images/7589847.png" />
          </image>
       </ImageView>
       <Label fx:id="movieName" alignment="CENTER" contentDisplay="CENTER" layoutX="27.0" layoutY="337.0" prefHeight="52.0" prefWidth="209.0" text="#1. ShawShank Redemsadasdasdddasdsad" wrapText="true">
@@ -26,11 +26,11 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutX="71.0" layoutY="391.0" prefHeight="31.0" prefWidth="124.0" spacing="3.0">
+      <HBox alignment="CENTER" layoutX="71.0" layoutY="388.0" spacing="3.0">
          <children>
             <ImageView fitHeight="24.0" fitWidth="24.0">
                <image>
-                  <Image url="@../../../icon/icons8-star-96.png" />
+                  <Image url="@../../../icon/icons8-star-50.png" />
                </image>
             </ImageView>
             <Label fx:id="rateingPoint" text="3.14" wrapText="true">

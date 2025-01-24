@@ -36,7 +36,7 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutX="558.0" layoutY="52.0" prefHeight="31.0" prefWidth="124.0" spacing="3.0">
+      <HBox alignment="CENTER" layoutX="556.0" layoutY="53.0" spacing="3.0">
          <children>
             <ImageView fitHeight="20.0" fitWidth="20.0">
                <image>
@@ -48,7 +48,7 @@
                   <Font name="Cambria Bold" size="23.0" />
                </font>
             </Label>
-            <Label fx:id="numberRate" text="/4k" wrapText="true">
+            <Label fx:id="numberRate" text="/4444k" wrapText="true">
                <font>
                   <Font size="17.0" />
                </font>
@@ -65,7 +65,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Button mnemonicParsing="false" onAction="#TopMovieButtonOnAction" prefHeight="138.0" prefWidth="745.0" style="-fx-background-color: transparent;" stylesheets="@../../../css/newStyles.css">
+      <Button layoutY="-2.0" mnemonicParsing="false" onAction="#TopMovieButtonOnAction" prefHeight="138.0" prefWidth="745.0" style="-fx-background-color: transparent;" stylesheets="@../../../css/newStyles.css">
          <styleClass>
             <String fx:value="mouse-moved" />
             <String fx:value="mouse-moved2" />
