@@ -11,3 +11,4 @@ RateYourMovie is a movie cataloging and rating application designed to help user
 FXML, JavaFX, MySQL
 
 ### Screenshots
+![cf776cad-f0e4-468e-aa53-6f222b4e939c](https://github.com/user-attachments/assets/c837d0fe-abcd-4b42-b0bf-a21caf3a9b29)
